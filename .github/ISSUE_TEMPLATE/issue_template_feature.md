@@ -1,5 +1,5 @@
 ---
-name: 🪩 Dansup feature issue template(feature)
+name: 🪩 Dansup issue template(feature)
 about: new feature 이슈 템플릿
 title: '🪩[Feature] '
 labels: 'feature'
