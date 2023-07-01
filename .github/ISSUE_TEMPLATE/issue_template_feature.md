@@ -1,7 +1,7 @@
 ---
-name: Dansup feature issue template(feature)
-about: feature 이슈 템플릿
-title: '[Feature]'
+name: 🪩 Dansup feature issue template(feature)
+about: new feature 이슈 템플릿
+title: '🪩[Feature] '
 labels: 'feature'
 assignees: haen-su
 
