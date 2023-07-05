@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,17 +25,20 @@ public class Profile {
     @Column(length = 50)
     private String intro;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private String danceGenre1;
+    @OneToMany(mappedBy = "profile")
+    private List<PortFolio> portFolios = new ArrayList<>();
 
     @Column
     @Enumerated(EnumType.STRING)
-    private String danceGenre2;
+    private DanceGenre danceGenre1;
 
     @Column
     @Enumerated(EnumType.STRING)
-    private String danceGenre3;
+    private DanceGenre danceGenre2;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private DanceGenre danceGenre3;
 
     @Column
     private String hashtag1;

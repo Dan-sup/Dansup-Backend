@@ -1,5 +1,6 @@
 package com.dansup.server.user.domain;
 
+import com.dansup.server.profile.domain.Profile;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -15,5 +16,9 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 
 }
