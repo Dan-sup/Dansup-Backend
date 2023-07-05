@@ -16,9 +16,9 @@ public class Portfolio {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "portfolio_id")
+    @JoinColumn(name = "profile_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Portfolio portFolio;
+    private Profile profile;
 
     @Column
     private String date;
