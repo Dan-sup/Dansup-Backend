@@ -1,6 +1,5 @@
 package com.dansup.server.profile.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -25,8 +24,19 @@ public class Profile {
     @Column(length = 50)
     private String intro;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pv_id")
+    private ProfileVideo profileVideo;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pi_id")
+    private ProfileImage profileImage;
+
     @OneToMany(mappedBy = "profile")
-    private List<PortFolio> portFolios = new ArrayList<>();
+    private List<Portfolio> portfolios = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profile")
+    private List<PortfolioVideo> portfolioVideos = new ArrayList<>();
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -40,13 +50,13 @@ public class Profile {
     @Enumerated(EnumType.STRING)
     private DanceGenre danceGenre3;
 
-    @Column
+    @Column(length = 5)
     private String hashtag1;
 
-    @Column
+    @Column(length = 5)
     private String hashtag2;
 
-    @Column
+    @Column(length = 5)
     private String hashtag3;
 
 }

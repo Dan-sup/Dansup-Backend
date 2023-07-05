@@ -1,7 +1,6 @@
 package com.dansup.server.profile.domain;
 
 import lombok.Getter;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -9,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-public class PortFolio {
+public class Portfolio {
 
     @Id
     @Column(name = "portfolio_id")
@@ -19,7 +18,7 @@ public class PortFolio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "portfolio_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private PortFolio portFolio;
+    private Portfolio portFolio;
 
     @Column
     private String date;
