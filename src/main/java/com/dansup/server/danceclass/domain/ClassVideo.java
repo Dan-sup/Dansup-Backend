@@ -13,7 +13,7 @@ public class ClassVideo {
     @Column(name = "cv_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dance_class_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private DanceClass danceClass;
