@@ -24,37 +24,37 @@ public class ProfileController {
 
     @ApiOperation(value = "Get Dancer Profile Detail", notes = "댄서 프로필 상세 조회")
     @GetMapping(value = "/{profileId}")
-    public ResponseEntity<GetProfileDetailDto> getProfileDetail(@PathVariable("profileId") String profileId) {
+    public ResponseEntity<GetProfileDetailDto> getProfileDetail(@PathVariable("profileId") Long profileId) {
         return ResponseEntity.ok(new GetProfileDetailDto());
     }
 
     @ApiOperation(value = "Get Dancer Profile Video", notes = "댄서 프로필 대표 영상 조회")
     @GetMapping(value = "/{profileId}/video")
-    public ResponseEntity<GetFileUrlDto> getProfileVideo(@PathVariable("profileId") String profileId) {
+    public ResponseEntity<GetFileUrlDto> getProfileVideo(@PathVariable("profileId") Long profileId) {
         return ResponseEntity.ok(new GetFileUrlDto());
     }
 
     @ApiOperation(value = "Get Dancer Profile Image", notes = "댄서 프로필 대표 이미지 조회")
     @GetMapping(value = "/{profileId}/image")
-    public ResponseEntity<GetFileUrlDto> getProfileImage(@PathVariable("profileId") String profileId) {
+    public ResponseEntity<GetFileUrlDto> getProfileImage(@PathVariable("profileId") Long profileId) {
         return ResponseEntity.ok(new GetFileUrlDto());
     }
 
     @ApiOperation(value = "Get Dancer Portfolio", notes = "댄서 프로필에서 포트폴리오(공연 및 활동 경력) 조회")
     @GetMapping(value = "/{profileId}/portfolio")
-    public ResponseEntity<List<GetPortfolioDto>> getPortfolioList(@PathVariable("profileId") String profileId) {
+    public ResponseEntity<List<GetPortfolioDto>> getPortfolioList(@PathVariable("profileId") Long profileId) {
         return ResponseEntity.ok(new ArrayList<GetPortfolioDto>());
     }
 
     @ApiOperation(value = "Get Dancer Portfolio Videos", notes = "댄서 프로필에서 포트폴리오 영상 조회")
     @GetMapping(value = "/{profileId}/portfolio/video")
-    public ResponseEntity<List<GetFileUrlDto>> getPortfolioVideoList(@PathVariable("profileId") String profileId) {
+    public ResponseEntity<List<GetFileUrlDto>> getPortfolioVideoList(@PathVariable("profileId") Long profileId) {
         return ResponseEntity.ok(new ArrayList<GetFileUrlDto>());
     }
 
     @ApiOperation(value = "Get Dancer Classes", notes = "댄서 프로필에서 운영 중인 수업 조회")
     @GetMapping(value = "/{profileId}/class")
-    public ResponseEntity<List<GetProfileClassListDto>> getProfileClassList(@PathVariable("profileId") String profileId) {
+    public ResponseEntity<List<GetProfileClassListDto>> getProfileClassList(@PathVariable("profileId") Long profileId) {
         return ResponseEntity.ok(new ArrayList<GetProfileClassListDto>());
     }
 
