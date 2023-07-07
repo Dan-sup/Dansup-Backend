@@ -1,5 +1,6 @@
 package com.dansup.server.user.controller;
 
+import com.dansup.server.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.user.dto.request.UploadFileDto;
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
@@ -59,8 +60,8 @@ public class MypageController {
 
     @ApiOperation(value = "Get My Classes", notes = "마이페이지에서 운영 중인 수업 조회")
     @GetMapping(value = "/class")
-    public ResponseEntity<List<GetProfileClassListDto>> getProfileClassList() {
-        return ResponseEntity.ok(new ArrayList<GetProfileClassListDto>());
+    public ResponseEntity<List<GetDanceClassListDto>> getProfileClassList() {
+        return ResponseEntity.ok(new ArrayList<GetDanceClassListDto>());
     }
 
     @ApiOperation(value = "Close My Class", notes = "마이페이지에서 운영 중인 수업 마감")
