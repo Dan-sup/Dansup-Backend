@@ -1,5 +1,6 @@
 package com.dansup.server.profile.controller;
 
+import com.dansup.server.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.profile.dto.response.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,8 +55,8 @@ public class ProfileController {
 
     @ApiOperation(value = "Get Dancer Classes", notes = "댄서 프로필에서 운영 중인 수업 조회")
     @GetMapping(value = "/{profileId}/class")
-    public ResponseEntity<List<GetProfileClassListDto>> getProfileClassList(@PathVariable("profileId") Long profileId) {
-        return ResponseEntity.ok(new ArrayList<GetProfileClassListDto>());
+    public ResponseEntity<List<GetDanceClassListDto>> getProfileClassList(@PathVariable("profileId") Long profileId) {
+        return ResponseEntity.ok(new ArrayList<GetDanceClassListDto>());
     }
 
 }
