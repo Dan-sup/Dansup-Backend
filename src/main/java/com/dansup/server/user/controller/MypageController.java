@@ -64,17 +64,5 @@ public class MypageController {
         return ResponseEntity.ok(new ArrayList<GetDanceClassListDto>());
     }
 
-    @ApiOperation(value = "Close My Class", notes = "마이페이지에서 운영 중인 수업 마감")
-    @PutMapping(value = "/class/{classId}")
-    public ResponseEntity<Void> closeClass(@PathVariable("classId") Long classId) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Delete My Class", notes = "마이페이지에서 운영 중인 수업 삭제")
-    @DeleteMapping(value = "/class/{classId}")
-    public ResponseEntity<Void> deleteClass(@PathVariable("classId") Long classId) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
 }
 
