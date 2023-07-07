@@ -24,7 +24,6 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping(value = "/danceclasses")
 @Api(tags = "DanceClass API", description = "댄스 수업 관련 api")
 public class DanceClassController {
@@ -39,8 +38,8 @@ public class DanceClassController {
 
     @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")
     @PostMapping(value = "")
-    public ResponseEntity<Void> createDanceClass(@AuthenticationPrincipal User user,
-                                                 @RequestBody @Valid CreateDanceClassDto createDanceClassDto) {
+    public ResponseEntity<Void> createDanceClass(
+                                                 @RequestBody CreateDanceClassDto createDanceClassDto) {
 
         // DanceClass Entity 생성 후
         // CreateDanceClassDto 에 담겨있는 영상을 S3에 올리고 ClassVideo Entity 생성
@@ -63,7 +62,7 @@ public class DanceClassController {
     @ApiOperation(value = "Filter DanceClass", notes = "필터링(검색 or 필터)을 통한 수업 리스트 조회")
     @GetMapping("/filters")
     public ResponseEntity<List<GetDanceClassListDto>> getDanceClassListByFilter(@RequestParam("word") String word,
-                                                                                @RequestBody @Valid DanceClassFilterDto danceClassFilterDto) {
+                                                                                @RequestBody DanceClassFilterDto danceClassFilterDto) {
         //  (1) 검색어(word)
         //  word 검색시 2가지 로직 필요
         //  word는
@@ -77,7 +76,7 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClass", notes = "댄스 수업 상세 조회")
     @GetMapping(value = "/{danceclassId}")
-    public ResponseEntity<Optional<DanceClass>> getDanceClass(@AuthenticationPrincipal User user,
+    public ResponseEntity<Optional<DanceClass>> getDanceClass(
                                                               @PathVariable("danceclassId") Long danceclassId) {
 
         return ResponseEntity.ok(danceClassService.getClass(danceclassId));
@@ -91,7 +90,7 @@ public class DanceClassController {
 
     @ApiOperation(value = "Close DanceClass", notes = "댄스 수업 마감")
     @PutMapping(value = "/{danceclassId}")
-    public ResponseEntity<Void> closeDanceClass(@AuthenticationPrincipal User user,
+    public ResponseEntity<Void> closeDanceClass(
                                                  @PathVariable("danceclassId") Long danceclassId) {
         // DanceClass 의 State 를 Closed 로 변경
         return new ResponseEntity<>(HttpStatus.OK);
@@ -99,7 +98,7 @@ public class DanceClassController {
 
     @ApiOperation(value = "Delete DanceClass", notes = "댄스 수업 삭제")
     @DeleteMapping("/{danceclassId}")
-    public ResponseEntity<Void> deletePost(@AuthenticationPrincipal User user,
+    public ResponseEntity<Void> deletePost(
                                            @PathVariable("danceclassId") Long danceclassId) {
 
         // DanceClass 의 State 를 Deleted 로 변경

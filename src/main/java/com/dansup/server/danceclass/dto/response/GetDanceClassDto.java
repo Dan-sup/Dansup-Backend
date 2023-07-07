@@ -5,6 +5,8 @@ import com.dansup.server.auth.dto.request.HashtagRequestDto;
 import com.dansup.server.danceclass.domain.DanceClass;
 import com.dansup.server.danceclass.domain.Difficulty;
 import com.dansup.server.danceclass.domain.Method;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -13,39 +15,72 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
+@ApiModel
 public class GetDanceClassDto {
 
     //수업에서 표출되는 댄서 정보
+    @ApiModelProperty(value = "강사(댄서) ID" , example = "4")
     private final Long userId;
+    @ApiModelProperty(value = "강사(댄서) 닉네임" , example = "아이키")
     private final String userNickname;
+    @ApiModelProperty(value = "강사(댄서) 프로필 이미지" , example = "image")
     private final String userProfileImage;
 
     //수업 정보
+    @ApiModelProperty(value = "수업 제목" , example = "임선생의 몸치 탈출 프로젝트")
     private final String title;
-
+    @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
     private List<HashtagRequestDto> hashtags;
 
+    @ApiModelProperty(value = "수업 장르" , example = "락킹")
     private List<GenreRequestDto> genres;
+    @ApiModelProperty(value = "수업 장소" , example = "서울특별시 강남구 00로 000")
     private final String location;
-    private final String difficulty;
-    private final int tuition;
-    private final int maxPeople;
+    @ApiModelProperty(value = "수업 난이도" , example = "BA")
+    @NotBlank
+    private String difficulty;
+
+    @ApiModelProperty(value = "수업 수강료" , example = "30000")
+    @NotBlank
+    private int tuition;
+
+    @ApiModelProperty(value = "수업 총원" , example = "10")
+    private int maxPeople;
+    @ApiModelProperty(value = "수업 노래 제목" , example = "뉴진스 - OMG")
     private final String song;
+    @ApiModelProperty(value = "수업 추가 설명1" , example = "이런 것들을 배울 거예요")
     private final String detail1;
+    @ApiModelProperty(value = "수업 추가 설명2" , example = "이런 분들을 위한 레슨이에요")
     private final String detail2;
+    @ApiModelProperty(value = "수업 추가 설명3" , example = "드리는 인사말")
     private final String detail3;
+    @ApiModelProperty(value = "수업 방식" , example = "OD")
     private final String method;
-    private final boolean mon;
-    private final boolean tue;
-    private final boolean wed;
-    private final boolean thu;
-    private final boolean fri;
-    private final boolean sat;
-    private final boolean sun;
+    @ApiModelProperty(value = "월요일" , example = "1")
+    private boolean mon;
+    @ApiModelProperty(value = "화요일" , example = "1")
+    private boolean tue;
+    @ApiModelProperty(value = "수요일" , example = "1")
+    private boolean wed;
+    @ApiModelProperty(value = "목요일" , example = "1")
+    private boolean thu;
+    @ApiModelProperty(value = "금요일" , example = "1")
+    private boolean fri;
+    @ApiModelProperty(value = "토요일" , example = "1")
+    private boolean sat;
+    @ApiModelProperty(value = "일요일" , example = "1")
+    private boolean sun;
+    @ApiModelProperty(value = "수업 시작 시간" , example = "20")
     private final int startTime;
+    @ApiModelProperty(value = "수업 종료 시간" , example = "22")
     private final int endTime;
+    @ApiModelProperty(value = "원데이 클래스에서의 날짜" , example = "2023/5/29")
     private final String date;
+    @ApiModelProperty(value = "수업 예약 링크" , example = "com.googleform.")
     private final String reserveLink;
+
+    @ApiModelProperty(value = "수업 상태(Active, Closed, Deleted" , example = "Active")
+    private String state;
 
     public GetDanceClassDto(DanceClass danceClass) {
         this.userId = danceClass.getUser().getId();
@@ -75,5 +110,6 @@ public class GetDanceClassDto {
         this.endTime = danceClass.getEndTime();
         this.date = danceClass.getDate();
         this.reserveLink = danceClass.getReserveLink();
+        this.state = danceClass.getState().toString();
     }
 }
