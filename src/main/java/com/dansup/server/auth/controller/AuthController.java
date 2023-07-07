@@ -25,4 +25,10 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Sign In", notes = "로그인")
+    @PostMapping(value = "/signin")
+    public ResponseEntity<Void> signIn() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
