@@ -86,4 +86,10 @@ public class DanceClass {
     private String date;
 
     private String reserveLink;
+
+    private State state = State.Active;
+
+    public void updateState(State state) {
+        this.state = state;
+    }
 }
