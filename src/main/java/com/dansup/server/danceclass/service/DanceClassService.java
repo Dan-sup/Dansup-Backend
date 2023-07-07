@@ -1,6 +1,5 @@
 package com.dansup.server.danceclass.service;
 
-import com.dansup.server.danceclass.domain.ClassVideo;
 import com.dansup.server.danceclass.domain.DanceClass;
 import com.dansup.server.danceclass.repository.DanceClassRepository;
 import lombok.RequiredArgsConstructor;
