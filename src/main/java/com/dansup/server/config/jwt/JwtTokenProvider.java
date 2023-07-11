@@ -116,7 +116,7 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         log.info("[resolveToken] HTTP 헤더에서 Token 값 추출");
 
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader("Authorization").split(" ")[1].trim();;
         log.info("[resolveToken] HTTP 헤더에서 Token 값 추출 완료: {}", token);
 
         return token;
