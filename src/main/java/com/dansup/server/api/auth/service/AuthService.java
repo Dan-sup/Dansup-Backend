@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,10 +18,12 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class AuthService {
 
-    private static final String kakaoClientId = "91cfc73a730663e93196247d884f837e";
-    private static final String redirectUri = "http://localhost:8080/auth/signin/kakao";
-
-    private static final String clientSecret = "oku8zmc3GaQSH1nOOIKqHyxzB3T4RlVR";
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    private String redirectUri;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String clientSecret;
 
     public String getKakaoAccessToken(String code) throws ParseException {
 
