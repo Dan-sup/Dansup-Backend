@@ -2,8 +2,8 @@ version: '3'
 services:
 
   web:
-    container_name: web
-    image: rmswjdtn/second-eyes-web
+    container_name: dansup_web
+    image: takgyunim/dan-sup-web
     expose:
       - 8080
     ports:
@@ -11,7 +11,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: rmswjdtn/second-eyes-nginx
+    image: takgyunim/dan-sup-nginx
     ports:
       - 80:80
     depends_on:
