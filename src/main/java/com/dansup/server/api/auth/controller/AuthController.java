@@ -23,7 +23,7 @@ public class AuthController {
     // https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=91cfc73a730663e93196247d884f837e&redirect_uri=http://localhost:8080/auth/signin/kakao
 
     @ApiOperation(value = "Get Kakao Login Auth Code", notes = "카카오톡 로그인 액세스 토큰 추출(프론트에서는 무시하세요)")
-    @GetMapping(value = "/signin/kakao")
+    @GetMapping(value = "/sign-in/kakao")
     public ResponseEntity<Void> authKakao(@RequestParam(value = "code", required = false) String code) throws ParseException {
         log.info("code: " + code);
         authService.getKakaoAccessToken(code);
@@ -32,13 +32,13 @@ public class AuthController {
 
 
     @ApiOperation(value = "Sign Up", notes = "회원 가입")
-    @PostMapping(value = "/signup")
+    @PostMapping(value = "/sign-up")
     public ResponseEntity<Void> signUp(@RequestBody SignUpDto signUpDto) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Sign In", notes = "로그인")
-    @PostMapping(value = "/signin")
+    @PostMapping(value = "/sign-in")
     public ResponseEntity<Void> signIn() {
         return new ResponseEntity<>(HttpStatus.OK);
     }
