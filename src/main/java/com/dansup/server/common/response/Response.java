@@ -27,7 +27,7 @@ public class Response<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
-    public Response<T> success(int code) {
+    public static <T> Response<T> success(int code) {
         return Response.<T>builder()
                 .isSuccess(true)
                 .code(200)
@@ -36,7 +36,7 @@ public class Response<T> {
                 .build();
     }
 
-    public Response<T> success(int code, T data) {
+    public static <T> Response<T> success(int code, T data) {
         return Response.<T>builder()
                 .isSuccess(true)
                 .code(200)
@@ -45,7 +45,7 @@ public class Response<T> {
                 .build();
     }
 
-    public Response<T> fail(ExceptionCode exceptionCode) {
+    public static <T> Response<T> fail(ExceptionCode exceptionCode) {
         return Response.<T>builder()
                 .isSuccess(false)
                 .code(exceptionCode.getHttpStatus().value())

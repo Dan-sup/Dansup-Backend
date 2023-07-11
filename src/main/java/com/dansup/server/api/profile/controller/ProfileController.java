@@ -5,7 +5,6 @@ import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDto;
-import com.dansup.server.profile.dto.response.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
