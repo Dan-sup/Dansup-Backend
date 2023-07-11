@@ -30,6 +30,11 @@ public class DanceClassController {
 
     private final DanceClassService danceClassService;
 
+    @GetMapping("/sample")
+    public String greeting(){
+        return "sample!!";
+    }
+
     @ApiOperation(value = "Get DanceClassList", notes = "댄스 수업 리스트 조회")
     @GetMapping(value = "")
     public ResponseEntity<List<GetDanceClassListDto>> getDanceClassList() {
