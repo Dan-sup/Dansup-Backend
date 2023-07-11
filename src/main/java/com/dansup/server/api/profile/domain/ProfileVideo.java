@@ -1,12 +1,13 @@
 package com.dansup.server.api.profile.domain;
 
+import com.dansup.server.common.BaseEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-public class ProfileVideo {
+public class ProfileVideo extends BaseEntity {
 
     @Id
     @Column(name = "pv_id")

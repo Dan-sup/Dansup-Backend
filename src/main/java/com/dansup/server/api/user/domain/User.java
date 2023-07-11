@@ -1,13 +1,14 @@
 package com.dansup.server.api.user.domain;
 
 import com.dansup.server.api.profile.domain.Profile;
+import com.dansup.server.common.BaseEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @Column(name = "user_id")

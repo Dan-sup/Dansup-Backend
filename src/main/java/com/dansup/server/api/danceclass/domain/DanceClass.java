@@ -1,6 +1,7 @@
 package com.dansup.server.api.danceclass.domain;
 
 import com.dansup.server.api.user.domain.User;
+import com.dansup.server.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DanceClass {
+public class DanceClass extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

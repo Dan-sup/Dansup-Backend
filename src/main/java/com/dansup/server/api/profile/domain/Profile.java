@@ -1,6 +1,7 @@
 package com.dansup.server.api.profile.domain;
 
 import com.dansup.server.api.genre.domain.ProfileGenre;
+import com.dansup.server.common.BaseEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Profile {
+public class Profile extends BaseEntity {
 
     @Id
     @Column(name = "profile_id")

@@ -1,5 +1,6 @@
 package com.dansup.server.api.profile.domain;
 
+import com.dansup.server.common.BaseEntity;
 import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-public class Portfolio {
+public class Portfolio extends BaseEntity {
 
     @Id
     @Column(name = "portfolio_id")
