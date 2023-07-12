@@ -45,13 +45,14 @@ jobs:
           sudo docker push ${{ secrets.DOCKER_REPO }}/dansup-nginx
 
       ## Docker Compose Up
-      - name: executing remote ssh commands using password
+      - name: Executing Remote Ssh Commands Using Password
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
+            cd /home/ubuntu/srv/ubuntu/
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-web
             sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-nginx
