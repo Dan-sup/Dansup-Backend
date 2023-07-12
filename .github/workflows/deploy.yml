@@ -52,6 +52,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
+            sh ~/srv/ubuntu/config/scripts/deploy.sh
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-web
             sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-nginx
