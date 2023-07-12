@@ -1,8 +1,12 @@
 package com.dansup.server.api.profile.domain;
 
+import com.dansup.server.api.auth.dto.request.SignUpDto;
 import com.dansup.server.api.genre.domain.ProfileGenre;
 import com.dansup.server.common.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,6 +14,9 @@ import java.util.List;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Profile extends BaseEntity {
 
     @Id
@@ -52,4 +59,7 @@ public class Profile extends BaseEntity {
     @Column(length = 5)
     private String hashtag3;
 
+    public static Profile createProfile(SignUpDto signUpDto) {
+        return new Profile();
+    }
 }

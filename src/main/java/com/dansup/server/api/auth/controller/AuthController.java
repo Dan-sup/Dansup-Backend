@@ -2,14 +2,18 @@ package com.dansup.server.api.auth.controller;
 
 import com.dansup.server.api.auth.dto.request.SignUpDto;
 import com.dansup.server.api.auth.service.AuthService;
+import com.dansup.server.api.user.domain.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,27 +24,11 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=91cfc73a730663e93196247d884f837e&redirect_uri=http://localhost:8080/auth/signin/kakao
-
-    @ApiOperation(value = "Get Kakao Login Auth Code", notes = "카카오톡 로그인 액세스 토큰 추출(프론트에서는 무시하세요)")
-    @GetMapping(value = "/sign-in/kakao")
-    public ResponseEntity<Void> authKakao(@RequestParam(value = "code", required = false) String code) throws ParseException {
-        log.info("code: " + code);
-        authService.getKakaoAccessToken(code);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
     @ApiOperation(value = "Sign Up", notes = "회원 가입")
     @PostMapping(value = "/sign-up")
-    public ResponseEntity<Void> signUp(@RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<Void> signUp(@AuthenticationPrincipal User user, @RequestBody SignUpDto signUpDto) {
+        authService.signin(user, signUpDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @ApiOperation(value = "Sign In", notes = "로그인")
-    @PostMapping(value = "/sign-in")
-    public ResponseEntity<Void> signIn() {
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

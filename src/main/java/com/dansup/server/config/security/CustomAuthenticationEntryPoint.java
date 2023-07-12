@@ -2,6 +2,7 @@ package com.dansup.server.config.security;
 
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.exception.ExceptionCode;
+import com.dansup.server.common.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -20,7 +21,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        throw new BaseException(ExceptionCode.USER_NOT_FOUND);
+        //esponse.Response.fail(ExceptionCode.USER_NOT_FOUND);
     }
 
 }

@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .antMatchers("/auth/sign-in").permitAll()
                 .antMatchers(HttpMethod.GET, "/danceclasses/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/profile/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
 
@@ -46,6 +47,8 @@ public class SecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 
                 .and()
+                //.oauth2Login()
+
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
