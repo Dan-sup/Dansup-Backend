@@ -63,5 +63,5 @@ jobs:
         key: ${{ secrets.KEY }}
         script:  |
           sudo docker rm -f $(docker ps -qa)
-          docker-compose-prod up -d
+          docker-compose.prod up -d
           docker image prune -f
