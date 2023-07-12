@@ -10,8 +10,6 @@ name: Deploy to EC2
 on:
   push:
     branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
 
 permissions:
   contents: read
@@ -63,5 +61,5 @@ jobs:
         key: ${{ secrets.KEY }}
         script:  |
           sudo docker rm -f $(docker ps -qa)
-          docker-compose.prod up -d
+          docker-compose -f /home/ubuntu/srv/ubuntu/docker-compose.prod.yml up --build -d
           docker image prune -f
