@@ -2,17 +2,19 @@ version: '3'
 services:
 
   web:
-    container_name: dansup-web
-    image: dansup-web
+    container_name: web
+    image: haensu/dansup-web
     expose:
       - 8080
     ports:
       - 8080:8080
-    tty: true
 
   nginx:
-    container_name: dansup-nginx
-    image: dansup-nginx
+    container_name: nginx
+    image: haensu/dansup-nginx
+    build:
+      dockerfile: Dockerfile
+      context: ./config/nginx
     ports:
       - 80:80
     depends_on:
