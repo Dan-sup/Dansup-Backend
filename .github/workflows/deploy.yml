@@ -20,11 +20,16 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      - name: Create Env File
+        run: |
+          touch .env
+          echo "${{ secrets.ENV_VARS }}" >> .env
+
       - name: Make application-database.yml
         run: |
           cd ./src/main/resources
           touch ./application-database.yml
-          echo "${{ secrets.DATABASE }}" >> ./application-database.yml
+          echo "${{ secrets.DATABASE }}" >> ./application-db.yml
         shell: bash
 
       - name: Build with Gradle
@@ -34,11 +39,11 @@ jobs:
 
       - name: Docker Build and Push
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_REPO }}/dansup-web .
-          docker push ${{ secrets.DOCKER_REPO }}/dansup-web
-          docker build -t ${{ secrets.DOCKER_REPO }}/dansup-nginx .
-          docker push ${{ secrets.DOCKER_REPO }}/dansup-nginx
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker build -t ${{ secrets.DOCKER_REPO }}/dansup-web .
+          sudo docker push ${{ secrets.DOCKER_REPO }}/dansup-web
+          sudo docker build -t ${{ secrets.DOCKER_REPO }}/dansup-nginx .
+          sudo docker push ${{ secrets.DOCKER_REPO }}/dansup-nginx
 
       ## Docker Compose Up
       - name: executing remote ssh commands using password
@@ -51,6 +56,6 @@ jobs:
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-web
             sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-nginx
-            docker-compose up -d
-            docker image prune -f
+            sudo docker-compose up -d
+            sudo docker image prune -f
 

@@ -3,7 +3,7 @@ services:
 
   web:
     container_name: web
-    image: haensu/dansup-web
+    image: ${DOCKER_REPO}/dansup-web
     expose:
       - 8080
     ports:
@@ -11,12 +11,12 @@ services:
 
   nginx:
     container_name: nginx
-    image: haensu/dansup-nginx
+    image: ${DOCKER_REPO}/dansup-nginx
     build:
       dockerfile: Dockerfile
       context: ./config/nginx
     ports:
       - 80:80
     depends_on:
-      - dansup_web
+      - web
     restart: always
