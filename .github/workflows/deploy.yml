@@ -25,10 +25,9 @@ jobs:
           touch .env
           echo "${{ secrets.ENV_VARS }}" >> .env
 
-      - name: Make application-database.yml
+      - name: Make application-db.yml
         run: |
           cd ./src/main/resources
-          touch ./application-database.yml
           echo "${{ secrets.DATABASE }}" >> ./application-db.yml
         shell: bash
 
