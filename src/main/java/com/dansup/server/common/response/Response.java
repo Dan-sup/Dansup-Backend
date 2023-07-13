@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minidev.json.JSONObject;
 
 @Builder
 @AllArgsConstructor
@@ -52,6 +53,14 @@ public class Response<T> {
                 .message(exceptionCode.getMessage())
                 .data(null)
                 .build();
+    }
+
+    public static JSONObject setJsonExceptionResponse(ExceptionCode exception) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("isSuccess", false);
+        jsonObject.put("code", exception.getHttpStatus().value());
+        jsonObject.put("message", exception.getMessage());
+        return jsonObject;
     }
 
 }

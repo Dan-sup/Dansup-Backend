@@ -27,6 +27,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
+
         return httpSecurity
                 .httpBasic().disable()
                 .csrf().disable()
@@ -51,6 +52,50 @@ public class SecurityConfig {
 
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+
     }
 
+
+//    @Configuration
+//    @EnableWebSecurity
+//    public class SecurityConfig extends WebSecurityConfigurerAdapter {
+//
+//        @Autowired
+//        private JwtAuthenticationEntryPoint unauthorizedHandler;
+//
+//        @Autowired
+//        private JwtAuthenticationProvider jwtAuthenticationProvider;
+//
+//        @Autowired
+//        private CustomOAuth2UserService customOAuth2UserService;
+//
+//        @Autowired
+//        private OAuth2SuccessHandler oAuth2SuccessHandler;
+//
+//        @Bean
+//        public AuthenticationManager authenticationManager() {
+//            return new ProviderManager(Arrays.asList(jwtAuthenticationProvider));
+//        }
+
+//        @Override
+//        protected void configure(HttpSecurity http) throws Exception {
+//            http
+//                    .cors().and()
+//                    .csrf().disable()
+//                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+//                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//                    .authorizeRequests()
+//                    .antMatchers("/api/auth/**").permitAll()
+//                    .anyRequest().authenticated()
+//                    .and()
+//                    .oauth2Login()
+//                    .userInfoEndpoint()
+//                    .userService(customOAuth2UserService)
+//                    .and()
+//                    .successHandler(oAuth2SuccessHandler);
+//
+//            http
+//                    .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+//        }
+//    }
 }

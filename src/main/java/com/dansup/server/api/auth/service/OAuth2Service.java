@@ -5,6 +5,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,11 +20,11 @@ import org.springframework.web.client.RestTemplate;
 public class OAuth2Service {
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-    private String kakaoClientId;
+    private static String kakaoClientId;
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-    private String redirectUri;
+    private static String redirectUri;
     @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
-    private String clientSecret;
+    private static String clientSecret;
 
     public String getKakaoAccessToken(String code) throws ParseException {
 
