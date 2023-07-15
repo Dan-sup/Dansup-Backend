@@ -1,6 +1,9 @@
 package com.dansup.server.config.security;
 
 import com.dansup.server.config.jwt.JwtAuthenticationFilter;
+import com.dansup.server.config.oauth.CustomOAuth2UserService;
+import com.dansup.server.config.oauth.OAuth2AuthenticationFailureHandler;
+import com.dansup.server.config.oauth.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -17,6 +25,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     private static final String[] swagger = {
             "/v2/api-docs",
@@ -29,8 +41,15 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity
+                .cors().configurationSource(corsConfigurationSource())
+
+                .and()
+                .formLogin().disable()
                 .httpBasic().disable()
                 .csrf().disable()
+                .headers().frameOptions().disable()
+
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
@@ -40,62 +59,43 @@ public class SecurityConfig {
                 .antMatchers("/auth/sign-in").permitAll()
                 .antMatchers(HttpMethod.GET, "/danceclasses/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/profile/**").permitAll()
+                .antMatchers("/oauth2/**").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
 
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .exceptionHandling()
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 
                 .and()
-                //.oauth2Login()
+                .oauth2Login()
+                .defaultSuccessUrl("/")
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler)
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
 
+                .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-//    @Configuration
-//    @EnableWebSecurity
-//    public class SecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//        @Autowired
-//        private JwtAuthenticationEntryPoint unauthorizedHandler;
-//
-//        @Autowired
-//        private JwtAuthenticationProvider jwtAuthenticationProvider;
-//
-//        @Autowired
-//        private CustomOAuth2UserService customOAuth2UserService;
-//
-//        @Autowired
-//        private OAuth2SuccessHandler oAuth2SuccessHandler;
-//
-//        @Bean
-//        public AuthenticationManager authenticationManager() {
-//            return new ProviderManager(Arrays.asList(jwtAuthenticationProvider));
-//        }
+        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        config.setExposedHeaders(List.of("*"));
 
-//        @Override
-//        protected void configure(HttpSecurity http) throws Exception {
-//            http
-//                    .cors().and()
-//                    .csrf().disable()
-//                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-//                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//                    .authorizeRequests()
-//                    .antMatchers("/api/auth/**").permitAll()
-//                    .anyRequest().authenticated()
-//                    .and()
-//                    .oauth2Login()
-//                    .userInfoEndpoint()
-//                    .userService(customOAuth2UserService)
-//                    .and()
-//                    .successHandler(oAuth2SuccessHandler);
-//
-//            http
-//                    .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-//        }
-//    }
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
+
 }

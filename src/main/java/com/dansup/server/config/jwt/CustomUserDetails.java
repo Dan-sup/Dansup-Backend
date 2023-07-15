@@ -1,21 +1,36 @@
 package com.dansup.server.config.jwt;
 
 import com.dansup.server.api.user.domain.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 
 /*
 토큰으로 사용될 유저 정보와 권한을 저장
  */
 
-public class CustomUserDetails implements UserDetails {
+@Getter
+public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private final User user;
+    private Map<String, Object> attributes;
 
     public CustomUserDetails(User user) {
         this.user = user;
+    }
+
+    public CustomUserDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return null;
     }
 
     @Override
@@ -53,4 +68,8 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
+    @Override
+    public String getName() {
+        return this.user.getEmail();
+    }
 }

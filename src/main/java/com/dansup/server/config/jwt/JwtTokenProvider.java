@@ -54,7 +54,7 @@ public class JwtTokenProvider {
                 .refreshToken(createRefreshToken(now))
                 .build();
 
-        log.info("[createJwtToken] Jwt 토큰 생성 완료: {}", jwtTokenDto.toString());
+        log.info("[createJwtToken] Jwt 토큰 생성 완료: {}, {}", jwtTokenDto.getAccessToken(), jwtTokenDto.getRefreshToken());
 
         return jwtTokenDto;
     }
