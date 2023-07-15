@@ -4,6 +4,7 @@ import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.exception.ExceptionCode;
+import com.dansup.server.config.security.UserAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,7 +27,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new BaseException(ExceptionCode.USER_NOT_FOUND));
 
-        return new CustomUserDetails(user);
+        return new UserAccount(user);
     }
 
 }

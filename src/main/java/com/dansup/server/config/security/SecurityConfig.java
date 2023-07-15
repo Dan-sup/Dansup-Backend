@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(swagger).permitAll()
-                .antMatchers("/auth/sign-in").permitAll()
+                .antMatchers("/auth/sign-up").permitAll()
                 .antMatchers(HttpMethod.GET, "/danceclasses/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/profile/**").permitAll()
                 .antMatchers("/oauth2/**").permitAll()

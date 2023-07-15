@@ -39,6 +39,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     () -> new BaseException(ExceptionCode.USER_NOT_FOUND)
             );
             log.info("[카카오 유저 등록 확인] user_id: {}", user.getId());
+
         } else {
             user = userService.createOAuthUser(email);
             log.info("[카카오 유저 등록] user_id: {}", user.getId());
