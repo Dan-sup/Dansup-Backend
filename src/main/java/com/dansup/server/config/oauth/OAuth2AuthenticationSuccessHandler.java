@@ -34,7 +34,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
         refreshTokenService.saveRefreshToken(jwtTokenDto.getRefreshToken(), oAuth2User.getName());
 
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/oauth/kakao/success")
+        String targetUrl = UriComponentsBuilder.fromUriString(setRedirectUrl(request.getServerName()))
                 .queryParam("accessToken", jwtTokenDto.getAccessToken())
                 .queryParam("refreshToken", jwtTokenDto.getRefreshToken())
                 .build()
@@ -44,6 +44,19 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
+    }
+
+    private String setRedirectUrl(String requestUrl) {
+        String redirectUrl = null;
+
+        if(requestUrl.equals("localhost")) {
+            redirectUrl = "http://localhost:8080/oauth/kakao/success";
+        }
+        if (requestUrl.equals("takgyun.shop")) {
+            redirectUrl = "http://localhost:3000/oauth/kakao/success";
+        }
+
+        return requestUrl;
     }
     
 }
