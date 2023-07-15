@@ -1,6 +1,9 @@
 package com.dansup.server.config.oauth;
 
-
+import com.dansup.server.api.user.domain.User;
+import com.dansup.server.api.user.repository.UserRepository;
+import com.dansup.server.common.exception.BaseException;
+import com.dansup.server.common.exception.ExceptionCode;
 import com.dansup.server.config.jwt.CustomUserDetails;
 import com.dansup.server.config.jwt.JwtTokenProvider;
 import com.dansup.server.config.jwt.dto.JwtTokenDto;
@@ -24,29 +27,43 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
     private final JwtTokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
 
+    private final UserRepository userRepository;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
         CustomUserDetails oAuth2User = (CustomUserDetails) authentication.getPrincipal();
 
-        JwtTokenDto jwtTokenDto = tokenProvider.createJwtToken(oAuth2User.getName());
+        String targetUrl = null;
 
-        refreshTokenService.saveRefreshToken(jwtTokenDto.getRefreshToken(), oAuth2User.getName());
+        if(isJoined(oAuth2User.getName())) {
+            log.info("[회원 프로필 존재, JWT 토큰 반환]");
 
-        String targetUrl = UriComponentsBuilder.fromUriString(setRedirectUrl(request.getServerName()))
-                .queryParam("accessToken", jwtTokenDto.getAccessToken())
-                .queryParam("refreshToken", jwtTokenDto.getRefreshToken())
-                .build()
-                .toUriString();
+            JwtTokenDto jwtTokenDto = tokenProvider.createJwtToken(oAuth2User.getName());
+            refreshTokenService.saveRefreshToken(jwtTokenDto.getRefreshToken(), oAuth2User.getName());
+
+             targetUrl = UriComponentsBuilder
+                     .fromUriString(setSuccessRedirectUrl(request.getServerName()))
+                     .queryParam("accessToken", jwtTokenDto.getAccessToken())
+                     .queryParam("refreshToken", jwtTokenDto.getRefreshToken())
+                     .build()
+                     .toUriString();
+        } else {
+            log.info("[회원 프로필 존재하지 않음, 프로필 입력 url로 리다이렉트]");
+
+            targetUrl = UriComponentsBuilder
+                    .fromUriString(setSignUpRedirectUrl(request.getServerName()))
+                    .build()
+                    .toUriString();
+        }
 
         log.info("[targetUrl]: {}", targetUrl);
-
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
     }
 
-    private String setRedirectUrl(String requestUrl) {
+    private String setSuccessRedirectUrl(String requestUrl) {
         String redirectUrl = null;
 
         if(requestUrl.equals("localhost")) {
@@ -56,8 +73,29 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
             redirectUrl = "http://localhost:3000/oauth/kakao/success";
         }
 
-        return requestUrl;
+        return redirectUrl;
     }
-    
+
+    private String setSignUpRedirectUrl(String requestUrl) {
+        String redirectUrl = null;
+
+        if(requestUrl.equals("localhost")) {
+            redirectUrl = "http://localhost:8080/auth/sign-up";
+        }
+        if (requestUrl.equals("takgyun.shop")) {
+            redirectUrl = "http://localhost:3000/auth/sign-up";
+        }
+
+        return redirectUrl;
+    }
+
+    private boolean isJoined(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new BaseException(ExceptionCode.USER_NOT_FOUND)
+        );
+
+        return user.getProfile() != null;
+    }
+
 }
 

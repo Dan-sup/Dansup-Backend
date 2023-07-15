@@ -2,6 +2,7 @@ package com.dansup.server.api.profile.domain;
 
 import com.dansup.server.api.auth.dto.request.SignUpDto;
 import com.dansup.server.api.genre.domain.ProfileGenre;
+import com.dansup.server.api.user.domain.User;
 import com.dansup.server.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,10 @@ public class Profile extends BaseEntity {
     @Column(name = "profile_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -63,6 +68,15 @@ public class Profile extends BaseEntity {
     private String hashtag3;
 
     public static Profile createProfile(SignUpDto signUpDto) {
-        return new Profile();
+        return Profile.builder()
+                .username(signUpDto.getUsername())
+                .nickname(signUpDto.getNickname())
+                .intro(signUpDto.getIntro())
+                .hashtag1(signUpDto.getHashtags().get(0).getHashtag())
+                .hashtag2(signUpDto.getHashtags().get(1).getHashtag())
+                .hashtag3(signUpDto.getHashtags().get(2).getHashtag())
+                .build();
+
+        // TO DO: 파일 업로드 로직 추가
     }
 }

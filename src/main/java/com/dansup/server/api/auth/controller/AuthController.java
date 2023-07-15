@@ -27,7 +27,8 @@ public class AuthController {
     @ApiOperation(value = "Sign Up", notes = "회원 가입")
     @PostMapping(value = "/sign-up")
     public ResponseEntity<Void> signUp(@AuthenticationPrincipal User user, @RequestBody SignUpDto signUpDto) {
-        authService.signin(user, signUpDto);
+        log.info("[현재 로그인한 유저]: {}", user.getEmail());
+        authService.signUp(user, signUpDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
