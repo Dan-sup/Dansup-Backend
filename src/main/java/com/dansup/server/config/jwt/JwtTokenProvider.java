@@ -116,10 +116,15 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         log.info("[resolveToken] HTTP 헤더에서 Token 값 추출");
 
-        String token = request.getHeader("Authorization"); //.split(" ")[1].trim();
-        log.info("[resolveToken] HTTP 헤더에서 Token 값 추출 완료: {}", token);
+        String authorization = request.getHeader("Authorization");
 
-        return token;
+        if(authorization != null) {
+            String token = authorization.split(" ")[1].trim();
+            log.info("[resolveToken] HTTP 헤더에서 Token 값 추출 완료: {}", token);
+            return token;
+        }
+
+        return null;
     }
 
     // JWT 토큰의 유효성 + 만료일 체크
@@ -133,9 +138,5 @@ public class JwtTokenProvider {
             throw new BaseException(ExceptionCode.TOKEN_NOT_VALID);
         }
     }
-
-
-
-
 
 }

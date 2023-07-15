@@ -34,7 +34,8 @@ public class SecurityConfig {
             "/v2/api-docs",
             "/swagger-resources/**",
             "/swagger-ui.html",
-            "/swagger/**"
+            "/swagger/**",
+            "/webjars/**"
     };
 
     @Bean
@@ -67,9 +68,9 @@ public class SecurityConfig {
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 
+                // TO DO: 왜 oauth2 인증 성공했는데도 failureHandler가 동작하는걸까?(fix)
                 .and()
                 .oauth2Login()
-                .defaultSuccessUrl("/")
                 .successHandler(oAuth2AuthenticationSuccessHandler)
                 .failureHandler(oAuth2AuthenticationFailureHandler)
                 .userInfoEndpoint()
@@ -96,6 +97,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
 
 }

@@ -28,6 +28,7 @@ import java.util.Set;
 
 
 @Configuration
+@EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
 
     @Bean
