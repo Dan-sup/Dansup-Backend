@@ -23,11 +23,7 @@ public class AuthService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
 
-    public void signUp(CustomUserDetails userDetails, SignUpDto signUpDto) {
-        User user = userRepository.findByEmail(userDetails.getName()).orElseThrow(
-                () -> new BaseException(ExceptionCode.USER_NOT_FOUND)
-        );
-
+    public void signUp(User user, SignUpDto signUpDto) {
         // TO DO: 파일 업로드 로직 추가해야함
         Profile profile = Profile.createProfile(user, signUpDto);
         profileRepository.save(profile);
