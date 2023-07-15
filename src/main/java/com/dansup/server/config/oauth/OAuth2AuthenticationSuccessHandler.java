@@ -1,6 +1,7 @@
 package com.dansup.server.config.oauth;
 
 import com.dansup.server.api.user.domain.User;
+import com.dansup.server.api.user.domain.UserRole;
 import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.exception.ExceptionCode;
@@ -37,26 +38,16 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
         String targetUrl = null;
 
-        if(isJoined(oAuth2User.getName())) {
-            log.info("[회원 프로필 존재, JWT 토큰 반환]");
+        JwtTokenDto jwtTokenDto = tokenProvider.createJwtToken(oAuth2User.getName());
+        refreshTokenService.saveRefreshToken(jwtTokenDto.getRefreshToken(), oAuth2User.getName());
 
-            JwtTokenDto jwtTokenDto = tokenProvider.createJwtToken(oAuth2User.getName());
-            refreshTokenService.saveRefreshToken(jwtTokenDto.getRefreshToken(), oAuth2User.getName());
-
-             targetUrl = UriComponentsBuilder
-                     .fromUriString(setSuccessRedirectUrl(request.getServerName()))
-                     .queryParam("accessToken", jwtTokenDto.getAccessToken())
-                     .queryParam("refreshToken", jwtTokenDto.getRefreshToken())
-                     .build()
-                     .toUriString();
-        } else {
-            log.info("[회원 프로필 존재하지 않음, 프로필 입력 url로 리다이렉트]");
-
-            targetUrl = UriComponentsBuilder
-                    .fromUriString(setSignUpRedirectUrl(request.getServerName()))
-                    .build()
-                    .toUriString();
-        }
+        targetUrl = UriComponentsBuilder
+                .fromUriString(setSuccessRedirectUrl(request.getServerName()))
+                .queryParam("accessToken", jwtTokenDto.getAccessToken())
+                .queryParam("refreshToken", jwtTokenDto.getRefreshToken())
+                .queryParam("isGuest", isGuest(oAuth2User.getName()))
+                .build()
+                .toUriString();
 
         log.info("[targetUrl]: {}", targetUrl);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
@@ -76,25 +67,12 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         return redirectUrl;
     }
 
-    private String setSignUpRedirectUrl(String requestUrl) {
-        String redirectUrl = null;
-
-        if(requestUrl.equals("localhost")) {
-            redirectUrl = "http://localhost:8080/auth/sign-up";
-        }
-        if (requestUrl.equals("takgyun.shop")) {
-            redirectUrl = "http://localhost:3000/auth/sign-up";
-        }
-
-        return redirectUrl;
-    }
-
-    private boolean isJoined(String email) {
+    private boolean isGuest(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new BaseException(ExceptionCode.USER_NOT_FOUND)
         );
 
-        return user.getProfile() != null;
+        return user.getUserRole().equals(UserRole.ROLE_GUEST);
     }
 
 }

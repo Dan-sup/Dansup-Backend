@@ -1,6 +1,7 @@
 package com.dansup.server;
 
 import com.dansup.server.api.user.domain.User;
+import com.dansup.server.api.user.domain.UserRole;
 import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.api.user.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
@@ -25,7 +27,7 @@ public class SignUpTest {
 
         User user = userRepository.findByEmail("test@test.com").get();
 
-        assertNull(user.getProfile());
+        assertEquals(user.getUserRole(), UserRole.ROLE_GUEST);
 
     }
 }

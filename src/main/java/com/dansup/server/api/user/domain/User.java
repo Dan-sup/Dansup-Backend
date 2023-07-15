@@ -28,4 +28,8 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    public void updateUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
 }

@@ -3,6 +3,7 @@ package com.dansup.server.api.auth.controller;
 import com.dansup.server.api.auth.dto.request.SignUpDto;
 import com.dansup.server.api.auth.service.AuthService;
 import com.dansup.server.api.user.domain.User;
+import com.dansup.server.config.jwt.CustomUserDetails;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class AuthController {
 
     @ApiOperation(value = "Sign Up", notes = "회원 가입")
     @PostMapping(value = "/sign-up")
-    public ResponseEntity<Void> signUp(@AuthenticationPrincipal User user, @RequestBody SignUpDto signUpDto) {
-        log.info("[현재 로그인한 유저]: {}", user.getEmail());
+    public ResponseEntity<Void> signUp(@AuthenticationPrincipal CustomUserDetails user, @RequestBody SignUpDto signUpDto) {
+        log.info("[현재 로그인한 유저]: {}", user.getName());
         authService.signUp(user, signUpDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

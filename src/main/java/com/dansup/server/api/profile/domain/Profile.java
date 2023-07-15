@@ -67,8 +67,9 @@ public class Profile extends BaseEntity {
     @Column(length = 5)
     private String hashtag3;
 
-    public static Profile createProfile(SignUpDto signUpDto) {
+    public static Profile createProfile(User user, SignUpDto signUpDto) {
         return Profile.builder()
+                .user(user)
                 .username(signUpDto.getUsername())
                 .nickname(signUpDto.getNickname())
                 .intro(signUpDto.getIntro())
@@ -76,7 +77,6 @@ public class Profile extends BaseEntity {
                 .hashtag2(signUpDto.getHashtags().get(1).getHashtag())
                 .hashtag3(signUpDto.getHashtags().get(2).getHashtag())
                 .build();
-
         // TO DO: 파일 업로드 로직 추가
     }
 }
