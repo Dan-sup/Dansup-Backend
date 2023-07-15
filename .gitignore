@@ -43,6 +43,7 @@ out/
 /src/main/resources/application.properties
 /src/main/resources/application-db.yml
 /src/main/resources/application-oauth.yml
+/src/main/resources/application-security.yml
 
 ### 환경변수 ###
 .env

@@ -40,6 +40,18 @@ jobs:
           echo "${{ secrets.DATABASE }}" >> ./application-db.yml
         shell: bash
 
+      - name: Make application-oauth.yml
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.OAUTH }}" >> ./application-oauth.yml
+        shell: bash
+
+      - name: Make application-security.yml
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.OAUTH }}" >> ./application-security.yml
+        shell: bash
+
       - name: Build with Gradle
         run: |
           chmod +x ./gradlew
