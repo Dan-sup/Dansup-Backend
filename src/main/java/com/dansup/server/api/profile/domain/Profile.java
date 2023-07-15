@@ -33,6 +33,7 @@ public class Profile extends BaseEntity {
     @Column(length = 50)
     private String intro;
 
+    @Builder.Default
     @OneToMany(mappedBy = "profile")
     private List<ProfileGenre> profileGenres = new ArrayList<>();
 
@@ -44,9 +45,11 @@ public class Profile extends BaseEntity {
     @JoinColumn(name = "pi_id")
     private ProfileImage profileImage;
 
+    @Builder.Default
     @OneToMany(mappedBy = "profile")
     private List<Portfolio> portfolios = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "profile")
     private List<PortfolioVideo> portfolioVideos = new ArrayList<>();
 
