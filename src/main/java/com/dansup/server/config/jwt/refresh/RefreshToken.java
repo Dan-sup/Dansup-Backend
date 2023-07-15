@@ -1,5 +1,6 @@
 package com.dansup.server.config.jwt.refresh;
 
+import com.dansup.server.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RefreshToken {
+public class RefreshToken extends BaseEntity {
 
     @Id
     @Column(name = "refresh_token_id")
