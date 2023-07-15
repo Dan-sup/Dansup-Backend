@@ -49,7 +49,7 @@ jobs:
       - name: Make application-security.yml
         run: |
           cd ./src/main/resources
-          echo "${{ secrets.OAUTH }}" >> ./application-security.yml
+          echo "${{ secrets.SECURITY }}" >> ./application-security.yml
         shell: bash
 
       - name: Build with Gradle
