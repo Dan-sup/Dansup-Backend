@@ -6,6 +6,8 @@ import com.dansup.server.api.profile.repository.ProfileRepository;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.domain.UserRole;
 import com.dansup.server.api.user.repository.UserRepository;
+import com.dansup.server.common.exception.BaseException;
+import com.dansup.server.common.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,9 +26,13 @@ public class AuthService {
         // TO DO: 파일 업로드 로직 추가해야함
         Profile profile = Profile.createProfile(user, signUpDto);
         profileRepository.save(profile);
-        user.updateUserRole(UserRole.ROLE_USER);
 
-        log.info("[Sign Up 완료]: {}, {}", profile.getId(), user.getUserRole());
+        User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new BaseException(ResponseCode.USER_NOT_FOUND)
+        );
+        findUser.updateUserRole(UserRole.ROLE_USER);
+
+        log.info("[Sign Up 완료]: {}, {}", profile.getId(), findUser.getUserRole());
     }
 
 }

@@ -1,7 +1,6 @@
 package com.dansup.server.config.security;
 
 import com.dansup.server.api.user.domain.User;
-import com.dansup.server.config.jwt.CustomUserDetails;
 import lombok.Getter;
 
 @Getter

@@ -5,7 +5,7 @@ import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.api.user.service.UserService;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.response.ResponseCode;
-import com.dansup.server.config.jwt.CustomUserDetails;
+import com.dansup.server.config.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

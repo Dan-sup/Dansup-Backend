@@ -1,4 +1,4 @@
-package com.dansup.server.config.jwt;
+package com.dansup.server.config.security;
 
 import com.dansup.server.api.user.domain.User;
 import lombok.Getter;

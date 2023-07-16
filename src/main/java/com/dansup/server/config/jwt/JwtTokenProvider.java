@@ -3,6 +3,8 @@ package com.dansup.server.config.jwt;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.response.ResponseCode;
 import com.dansup.server.config.jwt.dto.JwtTokenDto;
+import com.dansup.server.config.security.CustomUserDetails;
+import com.dansup.server.config.security.CustomUserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
