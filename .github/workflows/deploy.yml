@@ -1,10 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Deploy to EC2
 
 on:
@@ -16,55 +9,91 @@ permissions:
 
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
-
     steps:
-    - name: checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
 
-      ## create application-database.yaml
-    - name: make application-database.yaml
-      run: |
-        # create application-database.yaml
-        cd ./src/main/resources
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
-        # application-database.yaml 파일 생성
-        touch ./application-database.yaml
+      - name: Create Env File
+        run: |
+          touch .env
+          echo "${{ secrets.ENV_VARS }}" >> .env
 
-        # GitHub-Actions 에서 설정한 값을 application-database.yaml 파일에 쓰기
-        echo "${{ secrets.DATABASE }}" >> ./application-database.yaml
-      shell: bash
+      - name: Make application-db.yml
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.DATABASE }}" >> ./application-db.yml
+        shell: bash
 
-    - name: Build with Gradle
-      run: |
-        chmod +x ./gradlew
-        ./gradlew clean build -x test
+      - name: Make application-oauth.yml
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.OAUTH }}" >> ./application-oauth.yml
+        shell: bash
 
-      #          ./gradlew bootJar
+      - name: Make application-security.yml
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.SECURITY }}" >> ./application-security.yml
+        shell: bash
 
-      #      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      #      with:
-      #        arguments: build
+      - name: Build with Gradle
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean build -x test
 
-    - name: create remote directory
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ubuntu
-        key: ${{ secrets.KEY }}
-        script:  |
-          sudo docker stop $(sudo docker ps -a -q)
-          sudo docker rm $(sudo docker ps -a -q)
-          sudo docker rmi $(sudo docker images -q)
-          sudo docker-compose -f /home/ubuntu/srv/ubuntu/docker-compose.prod.yml pull
-          sudo docker-compose -f /home/ubuntu/srv/ubuntu/docker-compose.prod.yml up —build -d
-          sudo docker system prune -a -f
-          
-          
+      - name: Docker Build and Push
+        run: |
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker build -t ${{ secrets.DOCKER_REPO }}/dansup-web .
+          sudo docker push ${{ secrets.DOCKER_REPO }}/dansup-web
+          sudo docker build -f ./config/nginx/Dockerfile -t ${{ secrets.DOCKER_REPO }}/dansup-nginx .
+          sudo docker push ${{ secrets.DOCKER_REPO }}/dansup-nginx
+
+      - name: Create Remote Directory
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          script: mkdir -p ~/srv/ubuntu
+
+      - name: copy source via ssh key
+        uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete
+          remote_path: ~/srv/ubuntu
+          remote_host: ${{ secrets.HOST }}
+          remote_user: ubuntu
+          remote_key: ${{ secrets.KEY }}
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          script: |
+            sh ~/srv/ubuntu/config/scripts/deploy.sh
+            cd /home/ubuntu/srv/ubuntu/
+            sudo chmod 666 /var/run/docker.sock
+            sudo docker rm -f $(sudo docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-web
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-nginx
+            docker-compose up -d
+            docker image prune -f
