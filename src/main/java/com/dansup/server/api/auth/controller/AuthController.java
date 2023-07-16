@@ -1,5 +1,6 @@
 package com.dansup.server.api.auth.controller;
 
+import com.dansup.server.api.auth.dto.request.RefreshTokenDto;
 import com.dansup.server.api.auth.dto.request.SignUpDto;
 import com.dansup.server.api.auth.service.AuthService;
 import com.dansup.server.api.user.domain.User;
@@ -10,8 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +33,15 @@ public class AuthController {
         authService.signUp(user, signUpDto);
 
         return Response.success(ResponseCode.SUCCESS_CREATED);
+    }
+
+    @ApiOperation(value = "Sign Out", notes = "로그아웃")
+    @PostMapping(value = "/sign-out")
+    public Response<Void> signOut(@AuthUser User user, @RequestBody RefreshTokenDto refreshTokenDto) {
+        authService.signOut(user, refreshTokenDto);
+
+        return Response.success(ResponseCode.SUCCESS_OK);
+
     }
 
 }
