@@ -1,7 +1,7 @@
 package com.dansup.server.config.jwt;
 
 import com.dansup.server.common.exception.BaseException;
-import com.dansup.server.common.exception.ExceptionCode;
+import com.dansup.server.common.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (BaseException e) {
             log.info("[doFilterInternal] token 값 유효성 체크 실패");
-            handle(response, ExceptionCode.TOKEN_NOT_VALID);
+            handle(response, ResponseCode.TOKEN_NOT_VALID);
         }
 
         filterChain.doFilter(request, response);

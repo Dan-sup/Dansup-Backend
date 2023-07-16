@@ -1,7 +1,7 @@
 package com.dansup.server.config.jwt;
 
 import com.dansup.server.common.exception.BaseException;
-import com.dansup.server.common.exception.ExceptionCode;
+import com.dansup.server.common.response.ResponseCode;
 import com.dansup.server.config.jwt.dto.JwtTokenDto;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -135,7 +135,7 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (BaseException e) {
-            throw new BaseException(ExceptionCode.TOKEN_NOT_VALID);
+            throw new BaseException(ResponseCode.TOKEN_NOT_VALID);
         }
     }
 

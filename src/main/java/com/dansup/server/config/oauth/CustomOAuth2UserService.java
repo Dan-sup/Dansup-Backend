@@ -4,7 +4,7 @@ import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.api.user.service.UserService;
 import com.dansup.server.common.exception.BaseException;
-import com.dansup.server.common.exception.ExceptionCode;
+import com.dansup.server.common.response.ResponseCode;
 import com.dansup.server.config.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user;
         if(userRepository.existsByEmail(email)) {
             user = userRepository.findByEmail(email).orElseThrow(
-                    () -> new BaseException(ExceptionCode.USER_NOT_FOUND)
+                    () -> new BaseException(ResponseCode.USER_NOT_FOUND)
             );
             log.info("[카카오 유저 등록 확인] user_id: {}", user.getId());
 

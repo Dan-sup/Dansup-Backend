@@ -1,17 +1,24 @@
-package com.dansup.server.common.exception;
+package com.dansup.server.common.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @RequiredArgsConstructor
-public enum ExceptionCode {
+public enum ResponseCode {
 
-    // 밑에 Exception Code 추가
+    // 밑에 Response Code 추가
+
+    // success
+    SUCCESS_OK(OK, "요청에 성공하였습니다."),
+    SUCCESS_CREATED(CREATED, "요청에 성공하였습니다."),
+
+    //fail
+    FAIL_BAD_REQUEST(BAD_REQUEST, "잘못된 요청입니다."),
+    FAIL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다."),
 
     // Auth
     SIGNIN_FAILED(UNAUTHORIZED, "로그인에 실패하였습니다."),

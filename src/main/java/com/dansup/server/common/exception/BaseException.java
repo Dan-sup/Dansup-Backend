@@ -1,5 +1,6 @@
 package com.dansup.server.common.exception;
 
+import com.dansup.server.common.response.ResponseCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -7,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BaseException extends RuntimeException {
 
-    private final ExceptionCode exceptionCode;
+    private final ResponseCode exceptionCode;
 
 }
