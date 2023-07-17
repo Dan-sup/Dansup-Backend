@@ -44,7 +44,6 @@ out/
 /src/main/resources/application-db.yml
 /src/main/resources/application-oauth.yml
 /src/main/resources/application-security.yml
-/src/main/resources/application-redis.yml
 
 ### 환경변수 ###
 .env
