@@ -61,7 +61,7 @@ public class JwtTokenProvider {
         return jwtTokenDto;
     }
 
-    private String createAccessToken(String email, Date now) {
+    public String createAccessToken(String email, Date now) {
         log.info("[createAccessToken] 액세스 토큰 생성 시작");
 
         Claims claims = Jwts.claims().setSubject(email);
@@ -80,7 +80,7 @@ public class JwtTokenProvider {
         return accessToken;
     }
 
-    private String createRefreshToken(Date now) {
+    public String createRefreshToken(Date now) {
         log.info("[createRefreshToken] 리프레쉬 토큰 생성 시작");
 
         String refreshToken = Jwts.builder()
