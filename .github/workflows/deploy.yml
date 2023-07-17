@@ -52,6 +52,12 @@ jobs:
           echo "${{ secrets.SECURITY }}" >> ./application-security.yml
         shell: bash
 
+      - name: Make application-s3.yml
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.S3 }}" >> ./application-s3.yml
+        shell: bash
+
       - name: Build with Gradle
         run: |
           chmod +x ./gradlew
