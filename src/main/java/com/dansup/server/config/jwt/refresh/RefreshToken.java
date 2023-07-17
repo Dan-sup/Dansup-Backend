@@ -1,25 +1,26 @@
 package com.dansup.server.config.jwt.refresh;
 
 import com.dansup.server.common.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.*;
 
-@Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@RedisHash(value = "refreshToken", timeToLive = 60) // 단위는 초
 public class RefreshToken extends BaseEntity {
 
     @Id
-    @Column(name = "refresh_token_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @Indexed
+    private String refreshToken;
     private String email;
 
-    private String refreshToken;
+    @Builder
+    public RefreshToken(String refreshToken, String email) {
+        this.refreshToken = refreshToken;
+        this.email = email;
+    }
 
 }
