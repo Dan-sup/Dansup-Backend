@@ -1,6 +1,6 @@
 package com.dansup.server.config.oauth;
 
-import com.dansup.server.common.exception.ExceptionCode;
+import com.dansup.server.common.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -23,6 +23,6 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.getWriter().print(setJsonExceptionResponse(ExceptionCode.SIGNIN_FAILED));
+        response.getWriter().print(setJsonExceptionResponse(ResponseCode.SIGNIN_FAILED));
     }
 }

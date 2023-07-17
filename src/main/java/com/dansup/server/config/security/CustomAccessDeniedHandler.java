@@ -1,6 +1,6 @@
 package com.dansup.server.config.security;
 
-import com.dansup.server.common.exception.ExceptionCode;
+import com.dansup.server.common.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -28,7 +28,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.getWriter().print(setJsonExceptionResponse(ExceptionCode.ACCESS_DENIED));
+        response.getWriter().print(setJsonExceptionResponse(ResponseCode.ACCESS_DENIED));
     }
 
 }

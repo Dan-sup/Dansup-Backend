@@ -58,6 +58,12 @@ jobs:
           echo "${{ secrets.S3 }}" >> ./application-s3.yml
         shell: bash
 
+      - name: Make application-redis.yml
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.REDIS }}" >> ./application-redis.yml
+        shell: bash
+
       - name: Build with Gradle
         run: |
           chmod +x ./gradlew
@@ -101,5 +107,6 @@ jobs:
             sudo docker rm -f $(sudo docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-web
             sudo docker pull ${{ secrets.DOCKER_REPO }}/dansup-nginx
+            sudo docker pull redis
             docker-compose up -d
             docker image prune -f

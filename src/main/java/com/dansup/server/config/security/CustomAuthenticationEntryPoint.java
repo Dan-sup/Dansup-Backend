@@ -1,9 +1,7 @@
 package com.dansup.server.config.security;
 
-import com.dansup.server.common.exception.ExceptionCode;
-import com.dansup.server.common.response.Response;
+import com.dansup.server.common.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -30,7 +28,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.getWriter().print(setJsonExceptionResponse(ExceptionCode.USER_NOT_FOUND));
+        response.getWriter().print(setJsonExceptionResponse(ResponseCode.USER_NOT_FOUND));
 
         // dto 전송방식이 아니어도 바로 error를 전송하는 방식도 가능함
         //response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

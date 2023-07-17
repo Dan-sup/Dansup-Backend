@@ -4,8 +4,8 @@ import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.domain.UserRole;
 import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.common.exception.BaseException;
-import com.dansup.server.common.exception.ExceptionCode;
-import com.dansup.server.config.jwt.CustomUserDetails;
+import com.dansup.server.common.response.ResponseCode;
+import com.dansup.server.config.security.CustomUserDetails;
 import com.dansup.server.config.jwt.JwtTokenProvider;
 import com.dansup.server.config.jwt.dto.JwtTokenDto;
 import com.dansup.server.config.jwt.refresh.RefreshTokenService;
@@ -58,10 +58,10 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         String redirectUrl = null;
 
         if(requestUrl.equals("localhost")) {
-            redirectUrl = "http://localhost:8080/oauth/kakao/success";
+            redirectUrl = "http://localhost:8080/login/oauth2/success";
         }
         if (requestUrl.equals("takgyun.shop")) {
-            redirectUrl = "http://localhost:3000/oauth/kakao/success";
+            redirectUrl = "http://localhost:3000/login/oauth2/success";
         }
 
         return redirectUrl;
@@ -69,7 +69,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
     private boolean isGuest(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new BaseException(ExceptionCode.USER_NOT_FOUND)
+                () -> new BaseException(ResponseCode.USER_NOT_FOUND)
         );
 
         return user.getUserRole().equals(UserRole.ROLE_GUEST);

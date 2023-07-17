@@ -1,8 +1,10 @@
 package com.dansup.server.config.jwt;
 
 import com.dansup.server.common.exception.BaseException;
-import com.dansup.server.common.exception.ExceptionCode;
+import com.dansup.server.common.response.ResponseCode;
 import com.dansup.server.config.jwt.dto.JwtTokenDto;
+import com.dansup.server.config.security.CustomUserDetails;
+import com.dansup.server.config.security.CustomUserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +61,7 @@ public class JwtTokenProvider {
         return jwtTokenDto;
     }
 
-    private String createAccessToken(String email, Date now) {
+    public String createAccessToken(String email, Date now) {
         log.info("[createAccessToken] 액세스 토큰 생성 시작");
 
         Claims claims = Jwts.claims().setSubject(email);
@@ -78,7 +80,7 @@ public class JwtTokenProvider {
         return accessToken;
     }
 
-    private String createRefreshToken(Date now) {
+    public String createRefreshToken(Date now) {
         log.info("[createRefreshToken] 리프레쉬 토큰 생성 시작");
 
         String refreshToken = Jwts.builder()
@@ -135,7 +137,7 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (BaseException e) {
-            throw new BaseException(ExceptionCode.TOKEN_NOT_VALID);
+            throw new BaseException(ResponseCode.TOKEN_NOT_VALID);
         }
     }
 
