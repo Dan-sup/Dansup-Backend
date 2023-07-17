@@ -4,3 +4,5 @@ spring:
       - db
       - oauth
       - security
+      - s3
+      - redis
