@@ -57,6 +57,8 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
     private String setSuccessRedirectUrl(String requestUrl, int requestPort) {
         String redirectUrl = null;
 
+        log.info("[Request URL]: {}, {}", requestUrl, requestPort);
+
         if(requestUrl.equals("localhost") && requestPort == 8080) {
             redirectUrl = "http://localhost:8080/login/oauth2/success";
         }
