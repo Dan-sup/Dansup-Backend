@@ -19,6 +19,7 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.info("[카카오 로그인 실패] 인증 실패로 error 발생");
+        log.info("[exception]: {}", exception.getMessage());
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
