@@ -30,6 +30,11 @@ public class DanceClass extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cv_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private ClassVideo classVideo;
+
     @Column(nullable = false)
     @NotBlank(message = "수업 이름은 필수 값입니다.")
     private String title;

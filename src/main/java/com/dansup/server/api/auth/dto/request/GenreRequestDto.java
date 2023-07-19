@@ -8,7 +8,7 @@ import lombok.Getter;
 @ApiModel
 public class GenreRequestDto {
 
-    @ApiModelProperty(value = "댄스 장트")
+    @ApiModelProperty(value = "댄스 장르")
     private String genre;
 
 }
