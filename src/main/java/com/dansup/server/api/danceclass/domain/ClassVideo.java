@@ -13,11 +13,6 @@ public class ClassVideo extends BaseEntity {
     @Column(name = "cv_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dance_class_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private DanceClass danceClass;
-
     @Column(nullable = false)
     private String url;
 

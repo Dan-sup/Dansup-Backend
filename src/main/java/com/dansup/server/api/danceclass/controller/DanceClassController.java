@@ -6,12 +6,17 @@ import com.dansup.server.api.danceclass.dto.request.DanceClassFilterDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.service.DanceClassService;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
+import com.dansup.server.api.user.domain.User;
+import com.dansup.server.common.response.Response;
+import com.dansup.server.common.response.ResponseCode;
 import com.dansup.server.config.s3.S3UploaderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,27 +63,20 @@ public class DanceClassController {
     }
 
     @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")
-    @PostMapping(value = "")
-    public ResponseEntity<Void> createDanceClass(
-                                                 @RequestBody CreateDanceClassDto createDanceClassDto) {
+    @PostMapping(value = "",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Void> createDanceClass(@AuthenticationPrincipal User user,
+                                                 @RequestPart CreateDanceClassDto createDanceClassDto,
+                                                 @RequestPart MultipartFile videoFile) {
 
+//        log.info("[요청 유저]: {}", user.getEmail());
+//        DanceClassService.createClass(user, signUpDto);
+//
+//        return Response.success(ResponseCode.SUCCESS_CREATED);
         // DanceClass Entity 생성 후
         // CreateDanceClassDto 에 담겨있는 영상을 S3에 올리고 ClassVideo Entity 생성
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-//    @ApiOperation(value = "Search DanceClass", notes = "검색어를 검색을 통한 댄스 수업 리스트 조회")
-//    @GetMapping("/searches")
-//    public ResponseEntity<List<GetDanceClassListDto>> getDanceClassListBySearch(@RequestParam("word") String word) {
-//
-//        //  2가지 로직 필요
-//        //  word는
-//        //  댄스 수업의 title 가능
-//        //  댄서 nickname 가능
-//
-//        return ResponseEntity.ok(new ArrayList<GetDanceClassListDto>());
-//    }
 
     @ApiOperation(value = "Filter DanceClass", notes = "필터링(검색 or 필터)을 통한 수업 리스트 조회")
     @GetMapping("/filters")
@@ -97,7 +95,7 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClass", notes = "댄스 수업 상세 조회")
     @GetMapping(value = "/{danceclassId}")
-    public ResponseEntity<Optional<DanceClass>> getDanceClass(
+    public ResponseEntity<Optional<DanceClass>> getDanceClass(@AuthenticationPrincipal User user,
                                                               @PathVariable("danceclassId") Long danceclassId) {
 
         return ResponseEntity.ok(danceClassService.getClass(danceclassId));
@@ -111,7 +109,7 @@ public class DanceClassController {
 
     @ApiOperation(value = "Close DanceClass", notes = "댄스 수업 마감")
     @PutMapping(value = "/{danceclassId}")
-    public ResponseEntity<Void> closeDanceClass(
+    public ResponseEntity<Void> closeDanceClass( @AuthenticationPrincipal User user,
                                                  @PathVariable("danceclassId") Long danceclassId) {
         // DanceClass 의 State 를 Closed 로 변경
         return new ResponseEntity<>(HttpStatus.OK);
@@ -119,7 +117,7 @@ public class DanceClassController {
 
     @ApiOperation(value = "Delete DanceClass", notes = "댄스 수업 삭제")
     @DeleteMapping("/{danceclassId}")
-    public ResponseEntity<Void> deletePost(
+    public ResponseEntity<Void> deletePost(@AuthenticationPrincipal User user,
                                            @PathVariable("danceclassId") Long danceclassId) {
 
         // DanceClass 의 State 를 Deleted 로 변경
