@@ -34,6 +34,8 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
 
+        log.info("[request URL]: {}", request.getRequestURL());
+
         CustomUserDetails oAuth2User = (CustomUserDetails) authentication.getPrincipal();
 
         String targetUrl = null;
@@ -42,7 +44,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
         refreshTokenService.saveRefreshToken(jwtTokenDto.getRefreshToken(), oAuth2User.getName());
 
         targetUrl = UriComponentsBuilder
-                .fromUriString(setSuccessRedirectUrl(request.getServerName()))
+                .fromUriString(setSuccessRedirectUrl(request.getServerName(), request.getServerPort()))
                 .queryParam("accessToken", jwtTokenDto.getAccessToken())
                 .queryParam("refreshToken", jwtTokenDto.getRefreshToken())
                 .queryParam("isGuest", isGuest(oAuth2User.getName()))
@@ -54,11 +56,16 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
     }
 
-    private String setSuccessRedirectUrl(String requestUrl) {
+    private String setSuccessRedirectUrl(String requestUrl, int requestPort) {
         String redirectUrl = null;
 
-        if(requestUrl.equals("localhost")) {
+        log.info("[Request URI]: {}, {}", requestUrl, requestPort);
+
+        if(requestUrl.equals("localhost") && requestPort == 8080) {
             redirectUrl = "http://localhost:8080/login/oauth2/success";
+        }
+        if(requestUrl.equals("localhost") && requestPort == 3000) {
+            redirectUrl = "http://localhost:3000/login/oauth2/success";
         }
         if (requestUrl.equals("takgyun.shop")) {
             redirectUrl = "http://localhost:3000/login/oauth2/success";

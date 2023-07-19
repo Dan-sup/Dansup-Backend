@@ -67,7 +67,6 @@ public class SecurityConfig {
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 
-                // TO DO: 왜 oauth2 인증 성공했는데도 failureHandler가 동작하는걸까?(fix)
                 .and()
                 .oauth2Login()
                 .successHandler(oAuth2AuthenticationSuccessHandler)
