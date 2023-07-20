@@ -3,6 +3,7 @@ package com.dansup.server.api.danceclass.controller;
 import com.dansup.server.api.danceclass.domain.DanceClass;
 import com.dansup.server.api.danceclass.dto.request.CreateDanceClassDto;
 import com.dansup.server.api.danceclass.dto.request.DanceClassFilterDto;
+import com.dansup.server.api.danceclass.dto.response.GetDanceClassDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.service.DanceClassService;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
@@ -13,6 +14,7 @@ import com.dansup.server.config.s3.S3UploaderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping(value = "/danceclasses")
 @Api(tags = "DanceClass API", description = "댄스 수업 관련 api")
+@Slf4j
 public class DanceClassController {
 
     private final DanceClassService danceClassService;
@@ -64,18 +67,17 @@ public class DanceClassController {
 
     @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")
     @PostMapping(value = "",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> createDanceClass(@AuthenticationPrincipal User user,
-                                                 @RequestPart CreateDanceClassDto createDanceClassDto,
-                                                 @RequestPart MultipartFile videoFile) {
+    public Response<Void> createDanceClass(@AuthenticationPrincipal User user,
+                                                 @RequestBody CreateDanceClassDto createDanceClassDto,
+                                                 @RequestPart MultipartFile videoFile,
+                                                 @RequestPart MultipartFile thumbnail) throws IOException {
 
-//        log.info("[요청 유저]: {}", user.getEmail());
-//        DanceClassService.createClass(user, signUpDto);
-//
-//        return Response.success(ResponseCode.SUCCESS_CREATED);
+        log.info("[요청 유저]: {}", user.getEmail());
+        danceClassService.createClass(user, createDanceClassDto, videoFile, thumbnail);
+
+        return Response.success(ResponseCode.SUCCESS_CREATED);
         // DanceClass Entity 생성 후
         // CreateDanceClassDto 에 담겨있는 영상을 S3에 올리고 ClassVideo Entity 생성
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Filter DanceClass", notes = "필터링(검색 or 필터)을 통한 수업 리스트 조회")
@@ -95,10 +97,10 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClass", notes = "댄스 수업 상세 조회")
     @GetMapping(value = "/{danceclassId}")
-    public ResponseEntity<Optional<DanceClass>> getDanceClass(@AuthenticationPrincipal User user,
+    public ResponseEntity<GetDanceClassDto> getDanceClass(@AuthenticationPrincipal User user,
                                                               @PathVariable("danceclassId") Long danceclassId) {
 
-        return ResponseEntity.ok(danceClassService.getClass(danceclassId));
+        return ResponseEntity.ok(new GetDanceClassDto());
     }
 
     @ApiOperation(value = "Get DanceClass Video", notes = "댄서 수업 영상 조회")
