@@ -27,9 +27,11 @@ public class GetDanceClassListDto {
     private String location;
     @ApiModelProperty(value = "수업 방식" , example = "OD")
     private String method;
-
+    @ApiModelProperty(value = "수업 영상 thumbnail" , example = "Url")
+    private String thumbnailUrl;
     @ApiModelProperty(value = "수업 진행 요일" , example = "월")
     private List<DayResponseDto> days;
+
     @ApiModelProperty(value = "원데이 클래스에서의 날짜" , example = "2023/5/29")
     private String date;
 

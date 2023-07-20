@@ -25,6 +25,10 @@ public class GetDanceClassDto {
     //수업 정보
     @ApiModelProperty(value = "수업 제목" , example = "임선생의 몸치 탈출 프로젝트")
     private String title;
+    @ApiModelProperty(value = "수업 영상 thumbnail" , example = "thumbnailUrl")
+    private String thumbnailUrl;
+    @ApiModelProperty(value = "수업 영상" , example = "videoUrl")
+    private String videoUrl;
     @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
     private List<HashtagRequestDto> hashtags;
 
@@ -52,20 +56,8 @@ public class GetDanceClassDto {
     private String detail3;
     @ApiModelProperty(value = "수업 방식" , example = "OD")
     private String method;
-    @ApiModelProperty(value = "월요일" , example = "1")
-    private boolean mon;
-    @ApiModelProperty(value = "화요일" , example = "1")
-    private boolean tue;
-    @ApiModelProperty(value = "수요일" , example = "1")
-    private boolean wed;
-    @ApiModelProperty(value = "목요일" , example = "1")
-    private boolean thu;
-    @ApiModelProperty(value = "금요일" , example = "1")
-    private boolean fri;
-    @ApiModelProperty(value = "토요일" , example = "1")
-    private boolean sat;
-    @ApiModelProperty(value = "일요일" , example = "1")
-    private boolean sun;
+    @ApiModelProperty(value = "수업 진행 요일" , example = "화")
+    private List<DayResponseDto> days;
     @ApiModelProperty(value = "수업 시작 시간" , example = "20")
     private int startTime;
     @ApiModelProperty(value = "수업 종료 시간" , example = "22")
