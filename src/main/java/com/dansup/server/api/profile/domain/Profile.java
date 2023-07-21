@@ -67,12 +67,14 @@ public class Profile extends BaseEntity {
     @Column(length = 5)
     private String hashtag3;
 
-    public static Profile createProfile(User user, SignUpDto signUpDto) {
+    public static Profile createProfile(User user, SignUpDto signUpDto, ProfileImage profileImage, ProfileVideo profileVideo) {
         return Profile.builder()
                 .user(user)
                 .username(signUpDto.getUsername())
                 .nickname(signUpDto.getNickname())
                 .intro(signUpDto.getIntro())
+                .profileImage(profileImage)
+                .profileVideo(profileVideo)
                 .hashtag1(signUpDto.getHashtags().get(0).getHashtag())
                 .hashtag2(signUpDto.getHashtags().get(1).getHashtag())
                 .hashtag3(signUpDto.getHashtags().get(2).getHashtag())

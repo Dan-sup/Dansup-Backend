@@ -12,10 +12,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,10 +28,14 @@ public class AuthController {
     private final AuthService authService;
 
     @ApiOperation(value = "Sign Up", notes = "회원 가입")
-    @PostMapping(value = "/sign-up")
-    public Response<Void> signUp(@AuthUser User user, @RequestBody SignUpDto signUpDto) {
+    @PostMapping(value = "/sign-up", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response<Void> signUp(@AuthUser User user,
+                                 @RequestPart SignUpDto signUpDto,
+                                 @RequestPart MultipartFile pf_Image,
+                                 @RequestPart MultipartFile pf_Video) throws IOException {
+
         log.info("[현재 로그인한 유저]: {}", user.getEmail());
-        authService.signUp(user, signUpDto);
+        authService.signUp(user, signUpDto, pf_Image, pf_Video);
 
         return Response.success(ResponseCode.SUCCESS_CREATED);
     }

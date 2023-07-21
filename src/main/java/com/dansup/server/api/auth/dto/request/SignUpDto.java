@@ -19,8 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 public class SignUpDto {
 
-    @ApiModelProperty(value = "프로필 이미지", example = "이미지 multipartfile")
-    private MultipartFile profileImage;
+//    @ApiModelProperty(value = "프로필 이미지", example = "이미지 multipartfile")
+//    private MultipartFile profileImage;
 
     @ApiModelProperty(value = "계정 정보", example = "@younaring__")
     private String username;
@@ -28,8 +28,8 @@ public class SignUpDto {
     @ApiModelProperty(value = "댄서명", example = "유나")
     private String nickname;
 
-    @ApiModelProperty(value = "프로필 대표 영상", example = "이미지 multipartfile")
-    private MultipartFile profileVideo;
+//    @ApiModelProperty(value = "프로필 대표 영상", example = "이미지 multipartfile")
+//    private MultipartFile profileVideo;
 
     @ApiModelProperty(value = "한줄 소개", example = "나는 춤이 정말 좋아")
     private String intro;
