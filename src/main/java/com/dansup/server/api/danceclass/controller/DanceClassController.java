@@ -8,6 +8,7 @@ import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.service.DanceClassService;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.user.domain.User;
+import com.dansup.server.common.AuthUser;
 import com.dansup.server.common.response.Response;
 import com.dansup.server.common.response.ResponseCode;
 import com.dansup.server.config.s3.S3UploaderService;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,8 +64,12 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClassList", notes = "댄스 수업 리스트 조회")
     @GetMapping(value = "")
-    public ResponseEntity<List<GetDanceClassListDto>> getDanceClassList() {
-        return ResponseEntity.ok(new ArrayList<GetDanceClassListDto>());
+    public ResponseEntity<List<GetDanceClassListDto>> getDanceClassList(@AuthUser User user) {
+        List<GetDanceClassListDto> danceClassListDto;
+        danceClassListDto = danceClassService.getAllClassList(user);
+        Collections.reverse(danceClassListDto);
+
+        return ResponseEntity.ok(danceClassListDto);
     }
 
     @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")
@@ -71,14 +77,12 @@ public class DanceClassController {
     public Response<Void> createDanceClass(      @RequestPart(value="createDanceClassDto", required = false) CreateDanceClassDto createDanceClassDto,
                                                  @RequestPart(value="videoFile", required = false) MultipartFile videoFile,
                                                  @RequestPart(value="thumbnail", required = false) MultipartFile thumbnail,
-                                                 @AuthenticationPrincipal User user) throws IOException {
+                                                 @AuthUser User user) throws IOException {
 
         log.info("[요청 유저]: {}", user.getEmail());
         danceClassService.createClass(user, createDanceClassDto, videoFile, thumbnail);
 
         return Response.success(ResponseCode.SUCCESS_CREATED);
-        // DanceClass Entity 생성 후
-        // CreateDanceClassDto 에 담겨있는 영상을 S3에 올리고 ClassVideo Entity 생성
     }
 
     @ApiOperation(value = "Filter DanceClass", notes = "필터링(검색 or 필터)을 통한 수업 리스트 조회")
