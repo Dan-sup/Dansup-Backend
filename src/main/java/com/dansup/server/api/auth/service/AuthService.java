@@ -4,6 +4,8 @@ import com.dansup.server.api.auth.dto.request.RefreshTokenDto;
 import com.dansup.server.api.auth.dto.request.SignUpDto;
 import com.dansup.server.api.auth.dto.response.AccessTokenDto;
 import com.dansup.server.api.profile.domain.Profile;
+import com.dansup.server.api.profile.domain.ProfileImage;
+import com.dansup.server.api.profile.domain.ProfileVideo;
 import com.dansup.server.api.profile.repository.ProfileRepository;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.domain.UserRole;
@@ -13,12 +15,15 @@ import com.dansup.server.common.response.ResponseCode;
 import com.dansup.server.config.jwt.JwtTokenProvider;
 import com.dansup.server.config.jwt.refresh.RefreshToken;
 import com.dansup.server.config.jwt.refresh.RefreshTokenRepository;
+import com.dansup.server.config.s3.S3UploaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 
 @Service
@@ -31,17 +36,26 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    private final S3UploaderService s3UploaderService;
+
     private final JwtTokenProvider jwtTokenProvider;
 
 
-    public void signUp(User user, SignUpDto signUpDto) {
-        // TO DO: 파일 업로드 로직 추가해야함
-        Profile profile = Profile.createProfile(user, signUpDto);
+    public void signUp(User user, SignUpDto signUpDto, MultipartFile pf_Image, MultipartFile pf_Video) throws IOException {
+
+        String profileImage_url = s3UploaderService.imageUpload(pf_Image);
+        ProfileImage profileImage = ProfileImage.builder().url(profileImage_url).build();
+
+        String profileVideo_url = s3UploaderService.videoUpload(pf_Video);
+        ProfileVideo profileVideo = ProfileVideo.builder().url(profileVideo_url).build();
+
+        Profile profile = Profile.createProfile(user, signUpDto, profileImage, profileVideo);
         profileRepository.save(profile);
 
         User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new BaseException(ResponseCode.USER_NOT_FOUND)
         );
+
         findUser.updateUserRole(UserRole.ROLE_USER);
 
         log.info("[Sign Up 완료]: {}, {}", profile.getId(), findUser.getUserRole());

@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Parameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -67,10 +68,10 @@ public class DanceClassController {
 
     @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")
     @PostMapping(value = "",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response<Void> createDanceClass(@AuthenticationPrincipal User user,
-                                                 @RequestBody CreateDanceClassDto createDanceClassDto,
-                                                 @RequestPart MultipartFile videoFile,
-                                                 @RequestPart MultipartFile thumbnail) throws IOException {
+    public Response<Void> createDanceClass(      @RequestPart(value="createDanceClassDto", required = false) CreateDanceClassDto createDanceClassDto,
+                                                 @RequestPart(value="videoFile", required = false) MultipartFile videoFile,
+                                                 @RequestPart(value="thumbnail", required = false) MultipartFile thumbnail,
+                                                 @AuthenticationPrincipal User user) throws IOException {
 
         log.info("[요청 유저]: {}", user.getEmail());
         danceClassService.createClass(user, createDanceClassDto, videoFile, thumbnail);

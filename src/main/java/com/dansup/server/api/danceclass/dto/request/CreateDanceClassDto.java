@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 @ApiModel
 public class CreateDanceClassDto {
 

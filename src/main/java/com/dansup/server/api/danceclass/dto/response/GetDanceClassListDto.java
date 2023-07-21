@@ -19,6 +19,10 @@ public class GetDanceClassListDto {
     private String userNickname;
     @ApiModelProperty(value = "강사(댄서) 프로필 이미지" , example = "image")
     private String userProfileImage;
+
+    //
+    @ApiModelProperty(value = "dance_class_id" , example = "4")
+    private Long danceClassId;
     @ApiModelProperty(value = "수업 제목" , example = "임선생의 몸치 탈출 프로젝트")
     private String title;
     @ApiModelProperty(value = "수업 장르" , example = "락킹")

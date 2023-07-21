@@ -57,7 +57,7 @@ public class DanceClass extends BaseEntity {
     private Difficulty difficulty;
 
     @Column(nullable = false)
-    @NotBlank(message = "수업 가격은 필수 값입니다.")
+    @NotNull(message = "수업 가격은 필수 값입니다.")
     private int tuition;
 
     private int maxPeople;
@@ -82,11 +82,11 @@ public class DanceClass extends BaseEntity {
     private boolean sun;
 
     @Column(nullable = false)
-    @NotBlank(message = "수업 시작시간은 필수 값입니다.")
+    @NotNull(message = "수업 시작시간은 필수 값입니다.")
     private int startTime;
 
     @Column(nullable = false)
-    @NotBlank(message = "수업 종료시간은 필수 값입니다.")
+    @NotNull(message = "수업 종료시간은 필수 값입니다.")
     private int endTime;
 
     private String date;
