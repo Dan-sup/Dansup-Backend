@@ -6,7 +6,10 @@ import com.dansup.server.api.auth.dto.response.AccessTokenDto;
 import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.api.profile.domain.ProfileImage;
 import com.dansup.server.api.profile.domain.ProfileVideo;
+import com.dansup.server.api.profile.repository.ProfileImageRepository;
 import com.dansup.server.api.profile.repository.ProfileRepository;
+import com.dansup.server.api.profile.repository.ProfileVideoRepository;
+import com.dansup.server.api.profile.service.PortfolioService;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.domain.UserRole;
 import com.dansup.server.api.user.repository.UserRepository;
@@ -38,19 +41,28 @@ public class AuthService {
 
     private final S3UploaderService s3UploaderService;
 
+    private final PortfolioService portfolioService;
+
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final ProfileImageRepository profileImageRepository;
+    private final ProfileVideoRepository profileVideoRepository;
 
 
     public void signUp(User user, SignUpDto signUpDto, MultipartFile pf_Image, MultipartFile pf_Video) throws IOException {
 
         String profileImage_url = s3UploaderService.imageUpload(pf_Image);
         ProfileImage profileImage = ProfileImage.builder().url(profileImage_url).build();
+        profileImageRepository.save(profileImage);
 
         String profileVideo_url = s3UploaderService.videoUpload(pf_Video);
         ProfileVideo profileVideo = ProfileVideo.builder().url(profileVideo_url).build();
+        profileVideoRepository.save(profileVideo);
 
         Profile profile = Profile.createProfile(user, signUpDto, profileImage, profileVideo);
         profileRepository.save(profile);
+
+        portfolioService.createPortfolio(profile, signUpDto.getPortfolios());
 
         User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new BaseException(ResponseCode.USER_NOT_FOUND)

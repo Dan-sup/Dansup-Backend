@@ -1,5 +1,7 @@
 package com.dansup.server.api.danceclass.domain;
 
+import com.dansup.server.api.genre.domain.ClassGenre;
+import com.dansup.server.api.genre.domain.ProfileGenre;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.common.BaseEntity;
 import lombok.AllArgsConstructor;
@@ -12,6 +14,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +38,10 @@ public class DanceClass extends BaseEntity {
     @JoinColumn(name = "cv_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ClassVideo classVideo;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "danceClass")
+    private List<ClassGenre> classGenres = new ArrayList<>();
 
     @Column(nullable = false)
     @NotBlank(message = "수업 이름은 필수 값입니다.")

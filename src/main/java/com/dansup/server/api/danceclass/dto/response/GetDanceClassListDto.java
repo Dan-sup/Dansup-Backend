@@ -4,12 +4,18 @@ import com.dansup.server.api.auth.dto.request.GenreRequestDto;
 import com.dansup.server.api.danceclass.domain.DanceClass;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @ApiModel
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class GetDanceClassListDto {
 
     //수업에서 표출되는 댄서 정보
