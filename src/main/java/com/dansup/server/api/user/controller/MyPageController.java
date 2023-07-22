@@ -4,7 +4,12 @@ import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
+import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.dto.request.UploadFileDto;
+import com.dansup.server.api.user.service.MyPageService;
+import com.dansup.server.common.AuthUser;
+import com.dansup.server.common.response.Response;
+import com.dansup.server.common.response.ResponseCode;
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,13 +26,16 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/mypage")
-@Api(tags = "Mypage API", description = "마이페이지 관련 api")
-public class MypageController {
+@Api(tags = "My Page API", description = "마이페이지 관련 api")
+public class MyPageController {
+
+    private final MyPageService myPageService;
 
     @ApiOperation(value = "Get Mypage", notes = "마이페이지 조회")
     @GetMapping(value = "")
-    public ResponseEntity<GetProfileDetailDto> getMyPage() {
-        return ResponseEntity.ok(new GetProfileDetailDto());
+    public Response<GetProfileDetailDto> getMyPage(@AuthUser User user) {
+        GetProfileDetailDto getProfileDetailDto = myPageService.getMyPage(user);
+        return Response.success(ResponseCode.SUCCESS_OK, getProfileDetailDto);
     }
 
     @ApiOperation(value = "Get Mypage Video", notes = "마이페이지 대표 영상 조회")
