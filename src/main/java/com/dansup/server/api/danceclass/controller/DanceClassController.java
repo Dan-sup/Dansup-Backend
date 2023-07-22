@@ -64,12 +64,11 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClassList", notes = "댄스 수업 리스트 조회")
     @GetMapping(value = "")
-    public ResponseEntity<List<GetDanceClassListDto>> getDanceClassList(@AuthUser User user) {
-        List<GetDanceClassListDto> danceClassListDto;
-        danceClassListDto = danceClassService.getAllClassList(user);
+    public Response<List<GetDanceClassListDto>> getDanceClassList(@AuthUser User user) {
+        List<GetDanceClassListDto> danceClassListDto = danceClassService.getAllClassList(user);
         Collections.reverse(danceClassListDto);
 
-        return ResponseEntity.ok(danceClassListDto);
+        return Response.success(ResponseCode.SUCCESS_OK, danceClassListDto);
     }
 
     @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")

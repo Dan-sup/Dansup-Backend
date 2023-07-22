@@ -29,7 +29,10 @@ public enum ResponseCode {
     REFRESH_TOKEN_NOT_FOUND(UNAUTHORIZED, "리프레쉬 토큰이 만료되었습니다"),
 
     //mypage
-    MY_PAGE_NOT_FOUND(NOT_FOUND, "마이페이지 작성이 필요합니다.");
+    MY_PAGE_NOT_FOUND(NOT_FOUND, "마이페이지 작성이 필요합니다."),
+
+    //profile
+    PROFILE_NOT_FOUND(NOT_FOUND, "프로필이 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
