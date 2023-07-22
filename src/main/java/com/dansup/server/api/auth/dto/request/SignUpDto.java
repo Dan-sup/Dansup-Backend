@@ -19,17 +19,11 @@ import java.util.List;
 @NoArgsConstructor
 public class SignUpDto {
 
-//    @ApiModelProperty(value = "프로필 이미지", example = "이미지 multipartfile")
-//    private MultipartFile profileImage;
-
     @ApiModelProperty(value = "계정 정보", example = "@younaring__")
     private String username;
 
     @ApiModelProperty(value = "댄서명", example = "유나")
     private String nickname;
-
-//    @ApiModelProperty(value = "프로필 대표 영상", example = "이미지 multipartfile")
-//    private MultipartFile profileVideo;
 
     @ApiModelProperty(value = "한줄 소개", example = "나는 춤이 정말 좋아")
     private String intro;
@@ -38,9 +32,14 @@ public class SignUpDto {
     @Builder.Default
     private List<GenreRequestDto> genres = new ArrayList<>();
 
-    @ApiModelProperty(value = "해시 태그 리스트", notes = "해시태그 3개를 모두 주셔야해요. 없으면 null로 주세요!")
-    @Builder.Default
-    private List<HashtagRequestDto> hashtags = new ArrayList<>();
+    @ApiModelProperty(value = "해시 태그1", example = "#하이하이")
+    private String hashtag1;
+
+    @ApiModelProperty(value = "해시 태그2", example = "#브이브이")
+    private String hashtag2;
+
+    @ApiModelProperty(value = "해시 태그3", example = "#바이바이")
+    private String hashtag3;
 
     @ApiModelProperty(value = "경력 리스트")
     @Builder.Default

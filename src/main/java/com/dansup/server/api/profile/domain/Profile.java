@@ -17,7 +17,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Profile extends BaseEntity {
 
     @Id
@@ -38,7 +37,6 @@ public class Profile extends BaseEntity {
     @Column(length = 50)
     private String intro;
 
-    @Builder.Default
     @OneToMany(mappedBy = "profile")
     private List<ProfileGenre> profileGenres = new ArrayList<>();
 
@@ -50,11 +48,9 @@ public class Profile extends BaseEntity {
     @JoinColumn(name = "pi_id")
     private ProfileImage profileImage;
 
-    @Builder.Default
     @OneToMany(mappedBy = "profile")
     private List<Portfolio> portfolios = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "profile")
     private List<PortfolioVideo> portfolioVideos = new ArrayList<>();
 
@@ -67,18 +63,43 @@ public class Profile extends BaseEntity {
     @Column(length = 5)
     private String hashtag3;
 
-    public static Profile createProfile(User user, SignUpDto signUpDto, ProfileImage profileImage, ProfileVideo profileVideo) {
-        return Profile.builder()
-                .user(user)
-                .username(signUpDto.getUsername())
-                .nickname(signUpDto.getNickname())
-                .intro(signUpDto.getIntro())
-                .profileImage(profileImage)
-                .profileVideo(profileVideo)
-                .hashtag1(signUpDto.getHashtags().get(0).getHashtag())
-                .hashtag2(signUpDto.getHashtags().get(1).getHashtag())
-                .hashtag3(signUpDto.getHashtags().get(2).getHashtag())
-                .build();
-        // TO DO: 파일 업로드 로직 추가
+    @Builder
+    public Profile(User user, SignUpDto signUpDto, ProfileImage profileImage, ProfileVideo profileVideo) {
+        this.user = user;
+        this.username = signUpDto.getUsername();
+        this.nickname = signUpDto.getNickname();
+        this.intro = signUpDto.getIntro();
+        this.profileImage = profileImage;
+        this.profileVideo = profileVideo;
+        this.hashtag1 = signUpDto.getHashtag1();
+        this.hashtag2 = signUpDto.getHashtag2();
+        this.hashtag3 = signUpDto.getHashtag3();
     }
+
+    @Builder
+    public Profile(User user, SignUpDto signUpDto, ProfileImage profileImage) {
+        this.user = user;
+        this.username = signUpDto.getUsername();
+        this.nickname = signUpDto.getNickname();
+        this.intro = signUpDto.getIntro();
+        this.profileImage = profileImage;
+        this.profileVideo = null;
+        this.hashtag1 = signUpDto.getHashtag1();
+        this.hashtag2 = signUpDto.getHashtag2();
+        this.hashtag3 = signUpDto.getHashtag3();
+    }
+
+    @Builder
+    public Profile(User user, SignUpDto signUpDto, ProfileVideo profileVideo) {
+        this.user = user;
+        this.username = signUpDto.getUsername();
+        this.nickname = signUpDto.getNickname();
+        this.intro = signUpDto.getIntro();
+        this.profileImage = null;
+        this.profileVideo = profileVideo;
+        this.hashtag1 = signUpDto.getHashtag1();
+        this.hashtag2 = signUpDto.getHashtag2();
+        this.hashtag3 = signUpDto.getHashtag3();
+    }
+
 }

@@ -31,11 +31,11 @@ public class AuthController {
     @PostMapping(value = "/sign-up", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<Void> signUp(@AuthUser User user,
                                  @RequestPart SignUpDto signUpDto,
-                                 @RequestPart MultipartFile pf_Image,
-                                 @RequestPart MultipartFile pf_Video) throws IOException {
+                                 @RequestPart(required = false) MultipartFile profileImage,
+                                 @RequestPart(required = false) MultipartFile profileVideo) throws IOException {
 
         log.info("[현재 로그인한 유저]: {}", user.getEmail());
-        authService.signUp(user, signUpDto, pf_Image, pf_Video);
+        authService.signUp(user, signUpDto, profileImage, profileVideo);
 
         return Response.success(ResponseCode.SUCCESS_CREATED);
     }
