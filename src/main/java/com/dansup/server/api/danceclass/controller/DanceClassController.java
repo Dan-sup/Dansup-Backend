@@ -64,12 +64,12 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClassList", notes = "댄스 수업 리스트 조회")
     @GetMapping(value = "")
-    public ResponseEntity<List<GetDanceClassListDto>> getDanceClassList(@AuthUser User user) {
+    public Response<List<GetDanceClassListDto>> getDanceClassList() {
         List<GetDanceClassListDto> danceClassListDto;
-        danceClassListDto = danceClassService.getAllClassList(user);
+        danceClassListDto = danceClassService.getAllClassList();
         Collections.reverse(danceClassListDto);
 
-        return ResponseEntity.ok(danceClassListDto);
+        return Response.success(ResponseCode.SUCCESS_OK, danceClassListDto);
     }
 
     @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")
@@ -102,32 +102,37 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClass", notes = "댄스 수업 상세 조회")
     @GetMapping(value = "/{danceclassId}")
-    public ResponseEntity<GetDanceClassDto> getDanceClass(@AuthenticationPrincipal User user,
-                                                              @PathVariable("danceclassId") Long danceclassId) {
+    public Response<GetDanceClassDto> getDanceClass(@AuthUser User user,
+                                                    @PathVariable("danceclassId") Long danceclassId) {
 
-        return ResponseEntity.ok(new GetDanceClassDto());
+        GetDanceClassDto getDanceClassDto = danceClassService.detailClass(user, danceclassId);
+        return Response.success(ResponseCode.SUCCESS_OK, getDanceClassDto);
     }
 
-    @ApiOperation(value = "Get DanceClass Video", notes = "댄서 수업 영상 조회")
-    @GetMapping(value = "/{danceclassId}/video")
-    public ResponseEntity<GetFileUrlDto> getPortfolioVideoList(@PathVariable("danceclassId") Long danceclassId) {
-        return ResponseEntity.ok(new GetFileUrlDto());
-    }
+//    @ApiOperation(value = "Get DanceClass Video", notes = "댄서 수업 영상 조회")
+//    @GetMapping(value = "/{danceclassId}/video")
+//    public ResponseEntity<GetFileUrlDto> getPortfolioVideoList(@PathVariable("danceclassId") Long danceclassId) {
+//        return ResponseEntity.ok(new GetFileUrlDto());
+//    }
 
     @ApiOperation(value = "Close DanceClass", notes = "댄스 수업 마감")
     @PutMapping(value = "/{danceclassId}")
-    public ResponseEntity<Void> closeDanceClass( @AuthenticationPrincipal User user,
+    public ResponseEntity<Void> closeDanceClass( @AuthUser User user,
                                                  @PathVariable("danceclassId") Long danceclassId) {
         // DanceClass 의 State 를 Closed 로 변경
+        danceClassService.closeClass(user, danceclassId);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete DanceClass", notes = "댄스 수업 삭제")
     @DeleteMapping("/{danceclassId}")
-    public ResponseEntity<Void> deletePost(@AuthenticationPrincipal User user,
+    public ResponseEntity<Void> deletePost(@AuthUser User user,
                                            @PathVariable("danceclassId") Long danceclassId) {
 
         // DanceClass 의 State 를 Deleted 로 변경
+        danceClassService.deleteClass(user, danceclassId);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

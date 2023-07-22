@@ -19,6 +19,7 @@ public class ClassGenre extends BaseEntity {
 
     @Id
     @Column(name = "class_genre_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
