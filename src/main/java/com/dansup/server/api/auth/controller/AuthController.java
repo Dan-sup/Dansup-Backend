@@ -50,8 +50,8 @@ public class AuthController {
 
     @ApiOperation(value = "Reissue Access Token by Refresh Token", notes = "리프레쉬 토큰을 통해 액세스 토큰 재발급")
     @PostMapping(value = "/reissuance")
-    public Response<AccessTokenDto> reissueAccessToken(@AuthUser User user, @RequestBody RefreshTokenDto refreshTokenDto) {
-        AccessTokenDto accessTokenDto = authService.reissueAccessToken(user, refreshTokenDto);
+    public Response<AccessTokenDto> reissueAccessToken(@RequestBody RefreshTokenDto refreshTokenDto) {
+        AccessTokenDto accessTokenDto = authService.reissueAccessToken(refreshTokenDto);
 
         return Response.success(ResponseCode.SUCCESS_CREATED, accessTokenDto);
     }

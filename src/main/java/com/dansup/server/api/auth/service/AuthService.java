@@ -82,7 +82,7 @@ public class AuthService {
         SecurityContextHolder.clearContext();
     }
 
-    public AccessTokenDto reissueAccessToken(User user, RefreshTokenDto refreshTokenDto) {
+    public AccessTokenDto reissueAccessToken(RefreshTokenDto refreshTokenDto) {
 
         if(!jwtTokenProvider.validateToken(refreshTokenDto.getRefreshToken())) {
             throw new BaseException(ResponseCode.TOKEN_NOT_VALID);
@@ -92,6 +92,14 @@ public class AuthService {
         }
 
         log.info("[reissueAccessToken] 액세스 토큰 재발급 시작");
+
+        RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenDto.getRefreshToken()).orElseThrow(
+                () -> new BaseException(ResponseCode.REFRESH_TOKEN_NOT_FOUND)
+        );
+
+        User user = userRepository.findByEmail(refreshToken.getEmail()).orElseThrow(
+                () -> new BaseException(ResponseCode.USER_NOT_FOUND)
+        );
 
         AccessTokenDto accessTokenDto = AccessTokenDto.builder()
                 .accessToken(jwtTokenProvider.createAccessToken(user.getEmail(), new Date()))

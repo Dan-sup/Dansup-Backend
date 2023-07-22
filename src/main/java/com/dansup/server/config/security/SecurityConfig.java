@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/danceclasses/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/profile/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/reissuance").permitAll()
+                .antMatchers("/auth/reissuance").permitAll()
                 .antMatchers("/login/**").permitAll()
                 .anyRequest().authenticated()
 
