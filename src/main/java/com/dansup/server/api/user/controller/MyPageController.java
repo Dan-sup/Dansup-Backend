@@ -38,34 +38,18 @@ public class MyPageController {
         return Response.success(ResponseCode.SUCCESS_OK, getProfileDetailDto);
     }
 
-    @ApiOperation(value = "Get Mypage Video", notes = "마이페이지 대표 영상 조회")
-    @GetMapping(value = "/video")
-    public ResponseEntity<GetFileUrlDto> getProfileVideo() {
-        return ResponseEntity.ok(new GetFileUrlDto());
-    }
-
-    @ApiOperation(value = "Get Mypage Image", notes = "마이페이지 대표 이미지 조회")
-    @GetMapping(value = "/image")
-    public ResponseEntity<GetFileUrlDto> getProfileImage() {
-        return ResponseEntity.ok(new GetFileUrlDto());
-    }
-
     @ApiOperation(value = "Get Mypage Portfolio", notes = "마이페이지에서 포트폴리오(공연 및 활동 경력) 조회")
     @GetMapping(value = "/portfolio")
-    public ResponseEntity<List<GetPortfolioDto>> getPortfolioList() {
-        return ResponseEntity.ok(new ArrayList<GetPortfolioDto>());
+    public Response<List<GetPortfolioDto>> getPortfolioList(@AuthUser User user) {
+        List<GetPortfolioDto> getPortfolioDtos = myPageService.getPortfolioList(user);
+        return Response.success(ResponseCode.SUCCESS_OK, getPortfolioDtos);
     }
 
     @ApiOperation(value = "Get Mypage Portfolio Videos", notes = "마이페이지에서 포트폴리오 영상 조회")
     @GetMapping(value = "/portfolio/video")
-    public ResponseEntity<List<GetFileUrlDto>> getPortfolioVideoList() {
-        return ResponseEntity.ok(new ArrayList<GetFileUrlDto>());
-    }
-
-    @ApiOperation(value = "Upload Mypage Portfolio Videos", notes = "마이페이지에서 포트폴리오 영상 업로드")
-    @PostMapping(value = "/portfolio/video")
-    public ResponseEntity<Void> getPortfolioVideoList(@RequestBody UploadFileDto uploadFileDto) {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public Response<List<GetFileUrlDto>> getPortfolioVideoList(@AuthUser User user) {
+        List<GetFileUrlDto> getFileUrlDtos = myPageService.getPortfolioVideoList(user);
+        return Response.success(ResponseCode.SUCCESS_OK, getFileUrlDtos);
     }
 
     @ApiOperation(value = "Get My Classes", notes = "마이페이지에서 운영 중인 수업 조회")

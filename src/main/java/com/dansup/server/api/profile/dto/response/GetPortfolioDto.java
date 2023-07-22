@@ -3,10 +3,16 @@ package com.dansup.server.api.profile.dto.response;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @ApiModel
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class GetPortfolioDto {
 
     @ApiParam(value = "날짜", example = "2023.05.10.")
