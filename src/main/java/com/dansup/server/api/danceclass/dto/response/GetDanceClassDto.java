@@ -12,6 +12,9 @@ import java.util.List;
 
 @Getter
 @ApiModel
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class GetDanceClassDto {
 
     //수업에서 표출되는 댄서 정보
@@ -30,8 +33,11 @@ public class GetDanceClassDto {
     @ApiModelProperty(value = "수업 영상" , example = "videoUrl")
     private String videoUrl;
     @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
-    private List<HashtagRequestDto> hashtags;
-
+    private String hashtag1;
+    @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
+    private String hashtag2;
+    @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
+    private String hashtag3;
     @ApiModelProperty(value = "수업 장르" , example = "락킹")
     private List<GenreRequestDto> genres;
     @ApiModelProperty(value = "수업 장소" , example = "서울특별시 강남구 00로 000")
@@ -67,7 +73,7 @@ public class GetDanceClassDto {
     @ApiModelProperty(value = "수업 예약 링크" , example = "com.googleform.")
     private String reserveLink;
 
-    @ApiModelProperty(value = "수업 상태(Active, Closed, Deleted" , example = "Active")
+    @ApiModelProperty(value = "수업 상태(Active, Closed, Deleted)" , example = "Active")
     private String state;
 
 //    public GetDanceClassDto(DanceClass danceClass) {

@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface DanceClassRepository extends JpaRepository<DanceClass, Long> {
     Optional<DanceClass> findById(Long dance_class_id);
-
     List<DanceClass> findByState(State state);
 
     @Query("select d from DanceClass d where d.user.id = :userId")

@@ -25,9 +25,14 @@ public class CreateDanceClassDto {
     @NotBlank
     private String title;
 
-    @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의", notes = "해시태그 3개, 없으면 null로 주세요!")
-    @Builder.Default
-    private List<HashtagRequestDto> hashtags;
+    @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
+    private String hashtag1;
+
+    @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
+    private String hashtag2;
+
+    @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
+    private String hashtag3;
 
     @ApiModelProperty(value = "수업 장르" , example = "락킹", notes = "장르 5개, 없으면 null로 주세요!")
     private List<GenreRequestDto> genres;

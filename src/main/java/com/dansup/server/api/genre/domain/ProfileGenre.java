@@ -12,6 +12,7 @@ public class ProfileGenre extends BaseEntity {
 
     @Id
     @Column(name = "profile_genre_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
