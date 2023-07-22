@@ -109,7 +109,9 @@ public class AuthService {
     }
 
     private boolean validFile(MultipartFile multipartFile) {
-        return multipartFile != null;
+        log.info("[multipartfile]: {}", multipartFile);
+        log.info("[multipartfile]: {}", !multipartFile.isEmpty());
+        return !multipartFile.isEmpty();
     }
 
     private ProfileImage createProfileImage(MultipartFile profileImage) throws IOException {
@@ -117,6 +119,7 @@ public class AuthService {
         ProfileImage uploadedProfileImage;
 
         if(validFile(profileImage)) {
+            log.info("[image url not null]");
             profileImageUrl = s3UploaderService.imageUpload(profileImage);
         }
 
@@ -133,6 +136,7 @@ public class AuthService {
         ProfileVideo uploadedProfileVideo;
 
         if(validFile(profileVideo)) {
+            log.info("[video url not null]");
             profileVideoUrl = s3UploaderService.videoUpload(profileVideo);
         }
 

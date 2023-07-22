@@ -1,7 +1,6 @@
 package com.dansup.server.api.profile.dto.response;
 
 import com.dansup.server.api.auth.dto.request.GenreRequestDto;
-import com.dansup.server.api.auth.dto.request.HashtagRequestDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -18,6 +17,12 @@ public class GetProfileDetailDto {
 
     @ApiModelProperty(value = "댄서명", example = "유나")
     private String nickname;
+
+    @ApiModelProperty(value = "프로필 이미지 url", example = "url.jpg")
+    private String profileImageUrl;
+
+    @ApiModelProperty(value = "프로필 동영상 url", example = "url.mp4")
+    private String profileVideoUrl;
 
     @ApiModelProperty(value = "한줄 소개", example = "나는 춤이 정말 좋아")
     private String intro;
@@ -36,7 +41,8 @@ public class GetProfileDetailDto {
 
     @Builder
     public GetProfileDetailDto(String username, String nickname, String intro,
-                               List<GenreRequestDto> genres, String hashtag1, String hashtag2, String hashtag3) {
+                               List<GenreRequestDto> genres, String hashtag1, String hashtag2, String hashtag3,
+                               String profileImageUrl, String profileVideoUrl) {
         this.username = username;
         this.nickname = nickname;
         this.intro = intro;
@@ -44,6 +50,8 @@ public class GetProfileDetailDto {
         this.hashtag1 = hashtag1;
         this.hashtag2 = hashtag2;
         this.hashtag3 = hashtag3;
+        this.profileImageUrl = profileImageUrl;
+        this.profileVideoUrl = profileVideoUrl;
     }
 
 }

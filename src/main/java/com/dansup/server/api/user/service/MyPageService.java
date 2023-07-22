@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +43,8 @@ public class MyPageService {
                 .hashtag1(myPage.getHashtag1())
                 .hashtag2(myPage.getHashtag2())
                 .hashtag3(myPage.getHashtag3())
+                .profileImageUrl(myPage.getProfileImage().getUrl())
+                .profileVideoUrl(myPage.getProfileVideo().getUrl())
                 .build();
     }
 }
