@@ -64,9 +64,8 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClassList", notes = "댄스 수업 리스트 조회")
     @GetMapping(value = "")
-    public Response<List<GetDanceClassListDto>> getDanceClassList() {
-        List<GetDanceClassListDto> danceClassListDto;
-        danceClassListDto = danceClassService.getAllClassList();
+    public Response<List<GetDanceClassListDto>> getDanceClassList(@AuthUser User user) {
+        List<GetDanceClassListDto> danceClassListDto = danceClassService.getAllClassList(user);
         Collections.reverse(danceClassListDto);
 
         return Response.success(ResponseCode.SUCCESS_OK, danceClassListDto);

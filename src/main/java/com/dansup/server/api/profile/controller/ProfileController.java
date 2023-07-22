@@ -29,7 +29,8 @@ public class ProfileController {
     @ApiOperation(value = "Get Dancer Profile Detail", notes = "댄서 프로필 상세 조회")
     @GetMapping(value = "/{profileId}")
     public ResponseEntity<GetProfileDetailDto> getProfileDetail(@PathVariable("profileId") Long profileId) {
-        return ResponseEntity.ok(new GetProfileDetailDto());
+        //return ResponseEntity.ok(new GetProfileDetailDto());
+        return ResponseEntity.ok(null);
     }
 
     @ApiOperation(value = "Get Dancer Profile Video", notes = "댄서 프로필 대표 영상 조회")

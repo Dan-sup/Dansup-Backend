@@ -18,6 +18,7 @@ import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.api.profile.repository.ProfileRepository;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.common.exception.BaseException;
+import com.dansup.server.common.response.ResponseCode;
 import com.dansup.server.config.s3.S3UploaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.dansup.server.common.response.ResponseCode.FAIL_BAD_REQUEST;
 
@@ -101,58 +103,79 @@ public class DanceClassService {
         log.info("[DanceClass 생성 완료]: DanceClass_title = {}", danceClass.getTitle());
     }
 
-    public List<GetDanceClassListDto> getAllClassList(){
+//<<<<<<< HEAD
+//    public List<GetDanceClassListDto> getAllClassList(){
+//
+//        List<DanceClass> classList = new ArrayList<>();
+//        List<GetDanceClassListDto> danceClassListDto = new ArrayList<>();
+//
+//        classList = danceClassRepository.findByState(State.Active);
+//        log.info("classList : {} " , classList.get(0).getTitle());
+//
+//        for(DanceClass danceClass : classList){
+//
+//            log.info("danceClass_ID : {}", danceClass.getId());
+//            List<GenreRequestDto> genreRequestDtos = new ArrayList<>();
+//            List<ClassGenre> genres = classGenreRepository.findByDanceClassId(danceClass.getId());
+//            log.info("genres : {}", genres.get(0).getGenre().getName());
+//            genres.forEach(classGenre -> {
+//                log.info("classgenre : {}", classGenre.getId());
+//                genreRequestDtos.add(GenreRequestDto.builder().genre(classGenre.getGenre().getName()).build());
+//            });
+//            log.info("genres : {}", genreRequestDtos);
+//            List<DayResponseDto> days = new ArrayList<>();
+//            if(danceClass.isMon())
+//                days.add(DayResponseDto.builder().day("월").build());
+//            if(danceClass.isTue())
+//                days.add(DayResponseDto.builder().day("화").build());
+//            if(danceClass.isWed())
+//                days.add(DayResponseDto.builder().day("수").build());
+//            if(danceClass.isThu())
+//                days.add(DayResponseDto.builder().day("목").build());
+//            if(danceClass.isFri())
+//                days.add(DayResponseDto.builder().day("금").build());
+//            if(danceClass.isSat())
+//                days.add(DayResponseDto.builder().day("토").build());
+//            if(danceClass.isSun())
+//                days.add(DayResponseDto.builder().day("일").build());
 
-        List<DanceClass> classList = new ArrayList<>();
+    public List<GetDanceClassListDto> getAllClassList(User user){
+
+        List<DanceClass> classList = danceClassRepository.findByState(State.Active);
         List<GetDanceClassListDto> danceClassListDto = new ArrayList<>();
 
-        classList = danceClassRepository.findByState(State.Active);
-        log.info("classList : {} " , classList.get(0).getTitle());
+        Profile profile;
 
         for(DanceClass danceClass : classList){
-
-            log.info("danceClass_ID : {}", danceClass.getId());
-            List<GenreRequestDto> genreRequestDtos = new ArrayList<>();
-            List<ClassGenre> genres = classGenreRepository.findByDanceClassId(danceClass.getId());
-            log.info("genres : {}", genres.get(0).getGenre().getName());
-            genres.forEach(classGenre -> {
-                log.info("classgenre : {}", classGenre.getId());
-                genreRequestDtos.add(GenreRequestDto.builder().genre(classGenre.getGenre().getName()).build());
-            });
-            log.info("genres : {}", genreRequestDtos);
-            List<DayResponseDto> days = new ArrayList<>();
-            if(danceClass.isMon())
-                days.add(DayResponseDto.builder().day("월").build());
-            if(danceClass.isTue())
-                days.add(DayResponseDto.builder().day("화").build());
-            if(danceClass.isWed())
-                days.add(DayResponseDto.builder().day("수").build());
-            if(danceClass.isThu())
-                days.add(DayResponseDto.builder().day("목").build());
-            if(danceClass.isFri())
-                days.add(DayResponseDto.builder().day("금").build());
-            if(danceClass.isSat())
-                days.add(DayResponseDto.builder().day("토").build());
-            if(danceClass.isSun())
-                days.add(DayResponseDto.builder().day("일").build());
+            profile = profileRepository.findByUser(danceClass.getUser()).orElseThrow(
+                    () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
+            );
 
             Optional<Profile> userprofile = profileRepository.findByUser(danceClass.getUser());
             log.info("userprofile : {}", userprofile.get().getUser().getEmail());
             danceClassListDto.add(GetDanceClassListDto.builder()
-                            .userId(danceClass.getUser().getId())
-                            .userNickname(userprofile.get().getNickname())
-                            .userProfileImage(userprofile.get().getProfileImage().getUrl())
-                            .danceClassId(danceClass.getId())
-                            .title(danceClass.getTitle())
-                            .genres(genreRequestDtos)
-                            .location(danceClass.getLocation())
-                            .method(danceClass.getMethod().toString()) //method에 value 추가하기 또는 프론트와 상의하기
-                            .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
-                            .days(days)
-                            .date(danceClass.getDate())
-                            .state(danceClass.getState().toString())
-                            .build());
-            log.info("danceClassListDto : {}", danceClassListDto.get(0).getDanceClassId());
+                    .userId(danceClass.getUser().getId())
+                    .userNickname(profile.getNickname())
+                    .userProfileImage(profile.getProfileImage().getUrl())
+                    .danceClassId(danceClass.getId())
+                    .title(danceClass.getTitle())
+                    .genres(danceClass.getClassGenres().stream().map(
+                            profileGenre -> GenreRequestDto.builder()
+                                    .genre(profileGenre.getGenre().getName())
+                                    .build()
+                    ).collect(Collectors.toList()))
+                    .location(danceClass.getLocation())
+                    .method(danceClass.getMethod().toString())
+                    .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                    .mon(danceClass.isMon())
+                    .tue(danceClass.isTue())
+                    .wed(danceClass.isWed())
+                    .thu(danceClass.isThu())
+                    .fri(danceClass.isFri())
+                    .sat(danceClass.isSat())
+                    .sun(danceClass.isSun())
+                    .date(danceClass.getDate()).build()
+            );
         }
         log.info("danceClassList : {}", danceClassListDto);
         return danceClassListDto;

@@ -21,7 +21,13 @@ public class GetProfileDto {
     @ApiModelProperty(value = "댄스 장르 리스트")
     private List<GenreRequestDto> genres;
 
-    @ApiModelProperty(value = "해시태그 리스트")
-    private List<HashtagRequestDto> hashtags;
+    @ApiModelProperty(value = "해시태그1", example = "#하이하이")
+    private String hashtag1;
+
+    @ApiModelProperty(value = "해시태그2", example = "#하이하이")
+    private String hashtag2;
+
+    @ApiModelProperty(value = "해시태그3", example = "#하이하이")
+    private String hashtag3;
 
 }
