@@ -43,6 +43,8 @@ public class S3UploaderService {
     }
 
     public String upload(MultipartFile multipartFile, String bucket, String dirName) throws IOException {
+        if(multipartFile.isEmpty())
+            return null;
         String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName() + "." + extractExt(multipartFile.getOriginalFilename());   // S3에 저장될 파일 이름
         String uploadImageUrl = putS3(multipartFile, bucket, fileName); // s3로 업로드
         return uploadImageUrl;

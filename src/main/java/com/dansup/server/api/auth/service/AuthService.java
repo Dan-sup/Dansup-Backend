@@ -49,24 +49,21 @@ public class AuthService {
     private final ProfileVideoRepository profileVideoRepository;
 
 
-    public void signUp(User user, SignUpDto signUpDto, MultipartFile pf_Image, MultipartFile pf_Video) throws IOException {
-
-        String profileImage_url = s3UploaderService.imageUpload(pf_Image);
-        ProfileImage profileImage = ProfileImage.builder().url(profileImage_url).build();
-        profileImageRepository.save(profileImage);
-
-        String profileVideo_url = s3UploaderService.videoUpload(pf_Video);
-        ProfileVideo profileVideo = ProfileVideo.builder().url(profileVideo_url).build();
-        profileVideoRepository.save(profileVideo);
-
-        Profile profile = Profile.createProfile(user, signUpDto, profileImage, profileVideo);
-        profileRepository.save(profile);
-
-        portfolioService.createPortfolio(profile, signUpDto.getPortfolios());
+    public void signUp(User user, SignUpDto signUpDto, MultipartFile profileImage, MultipartFile profileVideo) throws IOException {
 
         User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new BaseException(ResponseCode.USER_NOT_FOUND)
         );
+
+        Profile profile = Profile.builder()
+                .user(findUser)
+                .profileImage(createProfileImage(profileImage))
+                .profileVideo(createProfileVideo(profileVideo))
+                .signUpDto(signUpDto)
+                .build();
+
+        profileRepository.save(profile);
+        portfolioService.createPortfolio(profile, signUpDto.getPortfolios());
 
         findUser.updateUserRole(UserRole.ROLE_USER);
 
@@ -110,4 +107,41 @@ public class AuthService {
         return accessTokenDto;
 
     }
+
+    private boolean validFile(MultipartFile multipartFile) {
+        return multipartFile != null;
+    }
+
+    private ProfileImage createProfileImage(MultipartFile profileImage) throws IOException {
+        String profileImageUrl = null;
+        ProfileImage uploadedProfileImage;
+
+        if(validFile(profileImage)) {
+            profileImageUrl = s3UploaderService.imageUpload(profileImage);
+        }
+
+        uploadedProfileImage = ProfileImage.builder()
+                .url(profileImageUrl)
+                .build();
+
+        profileImageRepository.save(uploadedProfileImage);
+        return uploadedProfileImage;
+    }
+
+    private ProfileVideo createProfileVideo(MultipartFile profileVideo) throws IOException {
+        String profileVideoUrl = null;
+        ProfileVideo uploadedProfileVideo;
+
+        if(validFile(profileVideo)) {
+            profileVideoUrl = s3UploaderService.videoUpload(profileVideo);
+        }
+
+        uploadedProfileVideo = ProfileVideo.builder()
+                .url(profileVideoUrl)
+                .build();
+
+        profileVideoRepository.save(uploadedProfileVideo);
+        return uploadedProfileVideo;
+    }
+
 }
