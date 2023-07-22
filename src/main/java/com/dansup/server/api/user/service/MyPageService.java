@@ -1,6 +1,9 @@
 package com.dansup.server.api.user.service;
 
 import com.dansup.server.api.auth.dto.request.GenreRequestDto;
+import com.dansup.server.api.danceclass.domain.DanceClass;
+import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
+import com.dansup.server.api.danceclass.repository.DanceClassRepository;
 import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
@@ -26,6 +29,8 @@ public class MyPageService {
 
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+
+    private final DanceClassRepository danceClassRepository;
 
     public GetProfileDetailDto getMyPage(User user) {
 
@@ -66,6 +71,38 @@ public class MyPageService {
         return myPage.getPortfolioVideos().stream().map(
                 portfolioVideo -> GetFileUrlDto.builder()
                         .url(portfolioVideo.getUrl())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
+    public List<GetDanceClassListDto> getDanceClassList(User user) {
+        List<DanceClass> danceClasses = danceClassRepository.findByUserId(user.getId());
+        Profile myPage = loadMyPage(user);
+
+        return danceClasses.stream().map(
+                danceClass -> GetDanceClassListDto.builder()
+                        .userId(user.getId())
+                        .userNickname(myPage.getNickname())
+                        .userProfileImage(myPage.getProfileImage().getUrl())
+                        .danceClassId(danceClass.getId())
+                        .title(danceClass.getTitle())
+                        .genres(danceClass.getClassGenres().stream().map(
+                                profileGenre -> GenreRequestDto.builder()
+                                        .genre(profileGenre.getGenre().getName())
+                                        .build()
+                        ).collect(Collectors.toList()))
+                        .location(danceClass.getLocation())
+                        .method(danceClass.getMethod().toString())
+                        .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                        .mon(danceClass.isMon())
+                        .tue(danceClass.isTue())
+                        .wed(danceClass.isWed())
+                        .thu(danceClass.isThu())
+                        .fri(danceClass.isFri())
+                        .sat(danceClass.isSat())
+                        .sun(danceClass.isSun())
+                        .date(danceClass.getDate())
+                        .state(danceClass.getState().toString())
                         .build()
         ).collect(Collectors.toList());
     }

@@ -54,8 +54,9 @@ public class MyPageController {
 
     @ApiOperation(value = "Get My Classes", notes = "마이페이지에서 운영 중인 수업 조회")
     @GetMapping(value = "/class")
-    public ResponseEntity<List<GetDanceClassListDto>> getProfileClassList() {
-        return ResponseEntity.ok(new ArrayList<GetDanceClassListDto>());
+    public Response<List<GetDanceClassListDto>> getProfileClassList(@AuthUser User user) {
+        List<GetDanceClassListDto> getDanceClassListDtos = myPageService.getDanceClassList(user);
+        return Response.success(ResponseCode.SUCCESS_OK, getDanceClassListDtos);
     }
 
 }
