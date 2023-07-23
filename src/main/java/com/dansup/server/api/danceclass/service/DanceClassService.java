@@ -11,6 +11,7 @@ import com.dansup.server.api.danceclass.dto.response.GetDanceClassDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.repository.ClassVideoRepository;
 import com.dansup.server.api.danceclass.repository.DanceClassRepository;
+import com.dansup.server.api.genre.GenreService;
 import com.dansup.server.api.genre.domain.ClassGenre;
 import com.dansup.server.api.genre.respository.ClassGenreRepository;
 import com.dansup.server.api.genre.respository.GenreRepository;
@@ -42,9 +43,10 @@ public class DanceClassService {
     private final ClassVideoRepository classVideoRepository;
 
     private final ProfileRepository profileRepository;
-    private final GenreRepository genreRepository;
-    private final ClassGenreRepository classGenreRepository;
     private final S3UploaderService s3UploaderService;
+
+    private final GenreService genreService;
+
     public void createClass(User user, CreateDanceClassDto createDanceClassDto, MultipartFile videofile, MultipartFile thumbnail) throws IOException {
 
         log.info("[createClass 시작]");
@@ -88,17 +90,7 @@ public class DanceClassService {
 
         log.info("[DanceClass 생성 완료]: DanceClass_title = {}", danceClass.getTitle());
 
-        List<GenreRequestDto> genres = createDanceClassDto.getGenres();
-
-        for(GenreRequestDto genreRequestDto : genres) {
-            if(genreRequestDto.getGenre() != null) {
-                ClassGenre classGenre = ClassGenre.builder()
-                        .danceClass(danceClass)
-                        .genre(genreRepository.findByName(genreRequestDto.getGenre())).build();
-                classGenreRepository.save(classGenre);
-            }
-            else break;
-        }
+        genreService.creatClassGenre(createDanceClassDto, danceClass);
 
         log.info("[DanceClass 생성 완료]: DanceClass_title = {}", danceClass.getTitle());
     }
@@ -238,5 +230,5 @@ public class DanceClassService {
 
         return getDanceClassDto;
     }
-    
+
 }

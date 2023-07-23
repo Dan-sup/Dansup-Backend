@@ -1,8 +1,14 @@
 package com.dansup.server.api.auth.service;
 
+import com.dansup.server.api.auth.dto.request.GenreRequestDto;
 import com.dansup.server.api.auth.dto.request.RefreshTokenDto;
 import com.dansup.server.api.auth.dto.request.SignUpDto;
 import com.dansup.server.api.auth.dto.response.AccessTokenDto;
+import com.dansup.server.api.genre.GenreService;
+import com.dansup.server.api.genre.domain.ClassGenre;
+import com.dansup.server.api.genre.domain.ProfileGenre;
+import com.dansup.server.api.genre.respository.GenreRepository;
+import com.dansup.server.api.genre.respository.ProfileGenreRepository;
 import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.api.profile.domain.ProfileImage;
 import com.dansup.server.api.profile.domain.ProfileVideo;
@@ -28,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -48,6 +55,8 @@ public class AuthService {
     private final ProfileImageRepository profileImageRepository;
     private final ProfileVideoRepository profileVideoRepository;
 
+    private final GenreService genreService;
+
 
     public void signUp(User user, SignUpDto signUpDto, MultipartFile profileImage, MultipartFile profileVideo) throws IOException {
 
@@ -63,6 +72,8 @@ public class AuthService {
                 .build();
 
         profileRepository.save(profile);
+
+        genreService.creatProfileGenre(signUpDto, profile);
         portfolioService.createPortfolio(profile, signUpDto.getPortfolios());
 
         findUser.updateUserRole(UserRole.ROLE_USER);

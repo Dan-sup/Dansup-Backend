@@ -2,12 +2,18 @@ package com.dansup.server.api.genre.domain;
 
 import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.common.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProfileGenre extends BaseEntity {
 
     @Id
