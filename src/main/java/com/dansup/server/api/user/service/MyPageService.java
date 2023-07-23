@@ -2,6 +2,7 @@ package com.dansup.server.api.user.service;
 
 import com.dansup.server.api.auth.dto.request.GenreRequestDto;
 import com.dansup.server.api.danceclass.domain.DanceClass;
+import com.dansup.server.api.danceclass.domain.State;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.repository.DanceClassRepository;
 import com.dansup.server.api.profile.domain.Profile;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,7 +78,9 @@ public class MyPageService {
     }
 
     public List<GetDanceClassListDto> getDanceClassList(User user) {
-        List<DanceClass> danceClasses = danceClassRepository.findByUserId(user.getId());
+//        List<DanceClass> danceClasses = danceClassRepository.findByUserId(user.getId());
+        List<DanceClass> danceClasses = danceClassRepository.findByUserAndStateNot(user, State.Delete);
+
         Profile myPage = loadMyPage(user);
 
         return danceClasses.stream().map(

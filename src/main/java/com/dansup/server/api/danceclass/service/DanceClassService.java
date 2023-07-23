@@ -88,8 +88,6 @@ public class DanceClassService {
 
         danceClassRepository.save(danceClass);
 
-        log.info("[DanceClass 생성 완료]: DanceClass_title = {}", danceClass.getTitle());
-
         genreService.creatClassGenre(createDanceClassDto, danceClass);
 
         log.info("[DanceClass 생성 완료]: DanceClass_title = {}", danceClass.getTitle());
@@ -125,12 +123,11 @@ public class DanceClassService {
         Profile profile;
 
         for(DanceClass danceClass : classList){
+
             profile = profileRepository.findByUser(danceClass.getUser()).orElseThrow(
                     () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
             );
 
-            Optional<Profile> userprofile = profileRepository.findByUser(danceClass.getUser());
-            log.info("userprofile : {}", userprofile.get().getUser().getEmail());
             danceClassListDto.add(GetDanceClassListDto.builder()
                     .userId(danceClass.getUser().getId())
                     .userNickname(profile.getNickname())
@@ -156,7 +153,7 @@ public class DanceClassService {
                     .state(danceClass.getState().toString()).build()
             );
         }
-        log.info("danceClassList : {}", danceClassListDto);
+
         return danceClassListDto;
     }
 

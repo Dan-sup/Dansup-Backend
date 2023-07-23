@@ -16,9 +16,10 @@ public interface DanceClassRepository extends JpaRepository<DanceClass, Long> {
     Optional<DanceClass> findById(Long dance_class_id);
     List<DanceClass> findByState(State state);
 
-    //List<DanceClass> findByUser(User user);
-    @Query("select d from DanceClass d where d.user.id = :userId")
-    List<DanceClass> findByUserId(@Param("userId") Long userId);
+    List<DanceClass> findByUserAndStateNot(User user, State state);
+
+//    @Query("select d from DanceClass d where d.user.id = :userId")
+//    List<DanceClass> findByUserId(@Param("userId") Long userId);
 
 
 }
