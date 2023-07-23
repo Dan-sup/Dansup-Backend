@@ -11,6 +11,4 @@ import java.util.List;
 
 @Repository
 public interface ClassGenreRepository extends JpaRepository<ClassGenre, Long> {
-    @Query("select d from ClassGenre d where d.danceClass.id = :danceClassId")
-    List<ClassGenre> findByDanceClassId(@Param("danceClassId")Long classId);
 }

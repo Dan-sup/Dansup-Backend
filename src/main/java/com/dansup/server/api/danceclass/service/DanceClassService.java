@@ -123,21 +123,7 @@ public class DanceClassService {
 //                genreRequestDtos.add(GenreRequestDto.builder().genre(classGenre.getGenre().getName()).build());
 //            });
 //            log.info("genres : {}", genreRequestDtos);
-//            List<DayResponseDto> days = new ArrayList<>();
-//            if(danceClass.isMon())
-//                days.add(DayResponseDto.builder().day("월").build());
-//            if(danceClass.isTue())
-//                days.add(DayResponseDto.builder().day("화").build());
-//            if(danceClass.isWed())
-//                days.add(DayResponseDto.builder().day("수").build());
-//            if(danceClass.isThu())
-//                days.add(DayResponseDto.builder().day("목").build());
-//            if(danceClass.isFri())
-//                days.add(DayResponseDto.builder().day("금").build());
-//            if(danceClass.isSat())
-//                days.add(DayResponseDto.builder().day("토").build());
-//            if(danceClass.isSun())
-//                days.add(DayResponseDto.builder().day("일").build());
+
 
     public List<GetDanceClassListDto> getAllClassList(User user){
 
@@ -174,7 +160,8 @@ public class DanceClassService {
                     .fri(danceClass.isFri())
                     .sat(danceClass.isSat())
                     .sun(danceClass.isSun())
-                    .date(danceClass.getDate()).build()
+                    .date(danceClass.getDate())
+                    .state(danceClass.getState().toString()).build()
             );
         }
         log.info("danceClassList : {}", danceClassListDto);
@@ -190,6 +177,7 @@ public class DanceClassService {
         }
 
         danceClass.get().updateState(State.Delete);
+        danceClassRepository.save(danceClass.get());
     }
 
     public void closeClass(User user, Long classId) throws BaseException{
@@ -201,7 +189,7 @@ public class DanceClassService {
         }
 
         danceClass.get().updateState(State.Closed);
-
+        danceClassRepository.save(danceClass.get());
     }
 
     public GetDanceClassDto detailClass(User user, Long classId){
@@ -209,27 +197,6 @@ public class DanceClassService {
         Optional<DanceClass> danceClass = danceClassRepository.findById(classId);
         Optional<Profile> userprofile = profileRepository.findByUser(danceClass.get().getUser());
 
-        List<GenreRequestDto> genreRequestDtos = new ArrayList<>();
-        List<ClassGenre> genres = classGenreRepository.findByDanceClassId(danceClass.get().getId());
-        genres.forEach(classGenre -> {
-            genreRequestDtos.add(GenreRequestDto.builder().genre(classGenre.getGenre().getName()).build());
-        });
-
-        List<DayResponseDto> days = new ArrayList<>();
-        if(danceClass.get().isMon())
-            days.add(DayResponseDto.builder().day("월").build());
-        if(danceClass.get().isTue())
-            days.add(DayResponseDto.builder().day("화").build());
-        if(danceClass.get().isWed())
-            days.add(DayResponseDto.builder().day("수").build());
-        if(danceClass.get().isThu())
-            days.add(DayResponseDto.builder().day("목").build());
-        if(danceClass.get().isFri())
-            days.add(DayResponseDto.builder().day("금").build());
-        if(danceClass.get().isSat())
-            days.add(DayResponseDto.builder().day("토").build());
-        if(danceClass.get().isSun())
-            days.add(DayResponseDto.builder().day("일").build());
 
         GetDanceClassDto getDanceClassDto = GetDanceClassDto.builder()
                 .userId(danceClass.get().getUser().getId())
@@ -241,7 +208,11 @@ public class DanceClassService {
                 .hashtag1(danceClass.get().getHashtag1())
                 .hashtag2(danceClass.get().getHashtag2())
                 .hashtag3(danceClass.get().getHashtag3())
-                .genres(genreRequestDtos)
+                .genres(danceClass.get().getClassGenres().stream().map(
+                                profileGenre -> GenreRequestDto.builder()
+                                        .genre(profileGenre.getGenre().getName())
+                                        .build()
+                ).collect(Collectors.toList()))
                 .location(danceClass.get().getLocation())
                 .difficulty(danceClass.get().getDifficulty().toString())
                 .tuition(danceClass.get().getTuition())
@@ -251,7 +222,13 @@ public class DanceClassService {
                 .detail2(danceClass.get().getDetail2())
                 .detail3(danceClass.get().getDetail3())
                 .method(danceClass.get().getMethod().toString())
-                .days(days)
+                .mon(danceClass.get().isMon())
+                .tue(danceClass.get().isTue())
+                .wed(danceClass.get().isWed())
+                .thu(danceClass.get().isThu())
+                .fri(danceClass.get().isFri())
+                .sat(danceClass.get().isSat())
+                .sun(danceClass.get().isSun())
                 .startTime(danceClass.get().getStartTime())
                 .endTime(danceClass.get().getEndTime())
                 .date(danceClass.get().getDate())
@@ -261,9 +238,5 @@ public class DanceClassService {
 
         return getDanceClassDto;
     }
-
-    public Optional<DanceClass> getClass(Long danceClassId){
-        return danceClassRepository.findById(danceClassId);
-    }
-
+    
 }
