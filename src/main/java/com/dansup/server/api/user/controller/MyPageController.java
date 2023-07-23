@@ -1,6 +1,8 @@
 package com.dansup.server.api.user.controller;
 
+import com.dansup.server.api.danceclass.dto.request.CreateDanceClassDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
+import com.dansup.server.api.danceclass.service.DanceClassService;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
@@ -12,6 +14,7 @@ import com.dansup.server.common.response.Response;
 import com.dansup.server.common.response.ResponseCode;
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +22,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +35,7 @@ import java.util.List;
 public class MyPageController {
 
     private final MyPageService myPageService;
+    private final DanceClassService danceClassService;
 
     @ApiOperation(value = "Get Mypage", notes = "마이페이지 조회")
     @GetMapping(value = "")
@@ -59,5 +65,37 @@ public class MyPageController {
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassListDtos);
     }
 
+    @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")
+    @PostMapping(value = "/class",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response<Void> createDanceClass(@RequestPart(value="createDanceClassDto", required = false) CreateDanceClassDto createDanceClassDto,
+                                           @RequestPart(value="videoFile", required = false) MultipartFile videoFile,
+                                           @RequestPart(value="thumbnail", required = false) MultipartFile thumbnail,
+                                           @AuthUser User user) throws IOException {
+
+        danceClassService.createClass(user, createDanceClassDto, videoFile, thumbnail);
+
+        return Response.success(ResponseCode.SUCCESS_CREATED);
+    }
+
+    @ApiOperation(value = "Close DanceClass", notes = "댄스 수업 마감")
+    @PutMapping(value = "/class/{danceclassId}")
+    public Response<Void> closeDanceClass( @AuthUser User user,
+                                           @PathVariable("danceclassId") Long danceclassId) {
+        // DanceClass 의 State 를 Closed 로 변경
+        danceClassService.closeClass(user, danceclassId);
+
+        return Response.success(ResponseCode.SUCCESS_OK);
+    }
+
+    @ApiOperation(value = "Delete DanceClass", notes = "댄스 수업 삭제")
+    @DeleteMapping("/class/{danceclassId}")
+    public Response<Void> deletePost(@AuthUser User user,
+                                     @PathVariable("danceclassId") Long danceclassId) {
+
+        // DanceClass 의 State 를 Deleted 로 변경
+        danceClassService.deleteClass(user, danceclassId);
+
+        return Response.success(ResponseCode.SUCCESS_OK);
+    }
 }
 

@@ -32,35 +32,12 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/danceclasses")
+@RequestMapping(value = "/classes")
 @Api(tags = "DanceClass API", description = "댄스 수업 관련 api")
 @Slf4j
 public class DanceClassController {
 
     private final DanceClassService danceClassService;
-    private final S3UploaderService s3UploaderService;
-
-//    test api
-//    @RequestMapping("/sample")
-//    public String greeting(){
-//        return "sample!!";
-//    }
-
-    //test api
-    //image 업로드 및 주소 반환 test
-    @PostMapping("/image-upload")
-    @ResponseBody
-    public String imageUpload(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        return s3UploaderService.upload(multipartFile, "dansupbucket", "image");
-    }
-
-    //test api
-    //video 업로드 및 주소 반환 test
-    @PostMapping("/video-upload")
-    @ResponseBody
-    public String videoUpload(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        return s3UploaderService.upload(multipartFile, "dansupbucket", "video");
-    }
 
     @ApiOperation(value = "Get DanceClassList", notes = "댄스 수업 리스트 조회")
     @GetMapping(value = "")
@@ -69,19 +46,6 @@ public class DanceClassController {
         Collections.reverse(danceClassListDto);
 
         return Response.success(ResponseCode.SUCCESS_OK, danceClassListDto);
-    }
-
-    @ApiOperation(value = "Create DanceClass", notes = "댄스 수업 정보 등록")
-    @PostMapping(value = "",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response<Void> createDanceClass(      @RequestPart(value="createDanceClassDto", required = false) CreateDanceClassDto createDanceClassDto,
-                                                 @RequestPart(value="videoFile", required = false) MultipartFile videoFile,
-                                                 @RequestPart(value="thumbnail", required = false) MultipartFile thumbnail,
-                                                 @AuthUser User user) throws IOException {
-
-        log.info("[요청 유저]: {}", user.getEmail());
-        danceClassService.createClass(user, createDanceClassDto, videoFile, thumbnail);
-
-        return Response.success(ResponseCode.SUCCESS_CREATED);
     }
 
     @ApiOperation(value = "Filter DanceClass", notes = "필터링(검색 or 필터)을 통한 수업 리스트 조회")
@@ -106,26 +70,5 @@ public class DanceClassController {
 
         GetDanceClassDto getDanceClassDto = danceClassService.detailClass(user, danceclassId);
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassDto);
-    }
-
-    @ApiOperation(value = "Close DanceClass", notes = "댄스 수업 마감")
-    @PutMapping(value = "/{danceclassId}")
-    public Response<Void> closeDanceClass( @AuthUser User user,
-                                                 @PathVariable("danceclassId") Long danceclassId) {
-        // DanceClass 의 State 를 Closed 로 변경
-        danceClassService.closeClass(user, danceclassId);
-
-        return Response.success(ResponseCode.SUCCESS_OK);
-    }
-
-    @ApiOperation(value = "Delete DanceClass", notes = "댄스 수업 삭제")
-    @DeleteMapping("/{danceclassId}")
-    public Response<Void> deletePost(@AuthUser User user,
-                                           @PathVariable("danceclassId") Long danceclassId) {
-
-        // DanceClass 의 State 를 Deleted 로 변경
-        danceClassService.deleteClass(user, danceclassId);
-
-        return Response.success(ResponseCode.SUCCESS_OK);
     }
 }
