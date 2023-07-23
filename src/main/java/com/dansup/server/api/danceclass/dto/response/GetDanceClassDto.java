@@ -62,8 +62,27 @@ public class GetDanceClassDto {
     private String detail3;
     @ApiModelProperty(value = "수업 방식" , example = "OD")
     private String method;
-    @ApiModelProperty(value = "수업 진행 요일" , example = "화")
-    private List<DayResponseDto> days;
+    @ApiModelProperty(value = "월요일" , example = "true")
+    private boolean mon;
+
+    @ApiModelProperty(value = "화요일" , example = "true")
+    private boolean tue;
+
+    @ApiModelProperty(value = "수요일" , example = "false")
+    private boolean wed;
+
+    @ApiModelProperty(value = "목요일" , example = "true")
+    private boolean thu;
+
+    @ApiModelProperty(value = "금요일" , example = "false")
+    private boolean fri;
+
+    @ApiModelProperty(value = "토요일" , example = "true")
+    private boolean sat;
+
+    @ApiModelProperty(value = "일요일" , example = "true")
+    private boolean sun;
+
     @ApiModelProperty(value = "수업 시작 시간" , example = "20")
     private int startTime;
     @ApiModelProperty(value = "수업 종료 시간" , example = "22")

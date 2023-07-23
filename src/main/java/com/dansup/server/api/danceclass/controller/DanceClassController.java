@@ -108,30 +108,24 @@ public class DanceClassController {
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassDto);
     }
 
-//    @ApiOperation(value = "Get DanceClass Video", notes = "댄서 수업 영상 조회")
-//    @GetMapping(value = "/{danceclassId}/video")
-//    public ResponseEntity<GetFileUrlDto> getPortfolioVideoList(@PathVariable("danceclassId") Long danceclassId) {
-//        return ResponseEntity.ok(new GetFileUrlDto());
-//    }
-
     @ApiOperation(value = "Close DanceClass", notes = "댄스 수업 마감")
     @PutMapping(value = "/{danceclassId}")
-    public ResponseEntity<Void> closeDanceClass( @AuthUser User user,
+    public Response<Void> closeDanceClass( @AuthUser User user,
                                                  @PathVariable("danceclassId") Long danceclassId) {
         // DanceClass 의 State 를 Closed 로 변경
         danceClassService.closeClass(user, danceclassId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return Response.success(ResponseCode.SUCCESS_OK);
     }
 
     @ApiOperation(value = "Delete DanceClass", notes = "댄스 수업 삭제")
     @DeleteMapping("/{danceclassId}")
-    public ResponseEntity<Void> deletePost(@AuthUser User user,
+    public Response<Void> deletePost(@AuthUser User user,
                                            @PathVariable("danceclassId") Long danceclassId) {
 
         // DanceClass 의 State 를 Deleted 로 변경
         danceClassService.deleteClass(user, danceclassId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return Response.success(ResponseCode.SUCCESS_OK);
     }
 }
