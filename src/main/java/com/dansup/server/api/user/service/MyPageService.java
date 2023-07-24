@@ -93,8 +93,10 @@ public class MyPageService {
                         .title(danceClass.getTitle())
                         .genres(danceClass.getClassGenres().stream().map(
                                 profileGenre -> GenreRequestDto.builder()
-                                        .genre((profileGenre.getGenre() != null) ?
-                                        profileGenre.getGenre().getName() : null)
+                                        .genre(
+                                                (profileGenre.getGenre() != null) ?
+                                        profileGenre.getGenre().getName() : null
+                                        )
                                         .build()
                         ).collect(Collectors.toList()))
                         .location(danceClass.getLocation())
