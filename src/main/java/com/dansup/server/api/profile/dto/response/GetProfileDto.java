@@ -4,12 +4,18 @@ import com.dansup.server.api.auth.dto.request.GenreRequestDto;
 import com.dansup.server.api.auth.dto.request.HashtagRequestDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @ApiModel
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class GetProfileDto {
 
     @ApiModelProperty(value = "댄서명", example = "유나")
