@@ -32,7 +32,10 @@ public enum ResponseCode {
     MY_PAGE_NOT_FOUND(NOT_FOUND, "마이페이지 작성이 필요합니다."),
 
     //profile
-    PROFILE_NOT_FOUND(NOT_FOUND, "프로필이 없습니다.");
+    PROFILE_NOT_FOUND(NOT_FOUND, "프로필이 없습니다."),
+
+    //class
+    CLASS_NOT_FOUND(NOT_FOUND, "클래스가 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
