@@ -182,7 +182,10 @@ public class DanceClassService {
                 .hashtag3(danceClass.getHashtag3())
                 .genres(danceClass.getClassGenres().stream().map(
                                 profileGenre -> GenreRequestDto.builder()
-                                        .genre(profileGenre.getGenre().getName())
+                                        .genre(
+                                                (profileGenre.getGenre() != null) ?
+                                                profileGenre.getGenre().getName() : null
+                                        )
                                         .build()
                 ).collect(Collectors.toList()))
                 .location(danceClass.getLocation())

@@ -115,7 +115,10 @@ public class ProfileService {
                         .title(danceClass.getTitle())
                         .genres(danceClass.getClassGenres().stream().map(
                                 classGenre -> GenreRequestDto.builder()
-                                        .genre(classGenre.getGenre().getName())
+                                        .genre(
+                                                (classGenre.getGenre() != null) ?
+                                                classGenre.getGenre().getName() : null
+                                        )
                                         .build()
                         ).collect(Collectors.toList()))
                         .location(danceClass.getLocation())
