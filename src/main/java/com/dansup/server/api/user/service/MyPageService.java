@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class MyPageService {
 
-    private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
 
     private final DanceClassRepository danceClassRepository;
@@ -44,7 +43,10 @@ public class MyPageService {
                 .intro(myPage.getIntro())
                 .genres(myPage.getProfileGenres().stream().map(
                         profileGenre -> GenreRequestDto.builder()
-                                .genre(profileGenre.getGenre().getName())
+                                .genre(
+                                        (profileGenre.getGenre() != null) ?
+                                        profileGenre.getGenre().getName() : null
+                                )
                                 .build()
                         ).collect(Collectors.toList())
                 )
@@ -78,7 +80,6 @@ public class MyPageService {
     }
 
     public List<GetDanceClassListDto> getDanceClassList(User user) {
-//        List<DanceClass> danceClasses = danceClassRepository.findByUserId(user.getId());
         List<DanceClass> danceClasses = danceClassRepository.findByUserAndStateNot(user, State.Delete);
 
         Profile myPage = loadMyPage(user);
@@ -92,7 +93,8 @@ public class MyPageService {
                         .title(danceClass.getTitle())
                         .genres(danceClass.getClassGenres().stream().map(
                                 profileGenre -> GenreRequestDto.builder()
-                                        .genre(profileGenre.getGenre().getName())
+                                        .genre((profileGenre.getGenre() != null) ?
+                                        profileGenre.getGenre().getName() : null)
                                         .build()
                         ).collect(Collectors.toList()))
                         .location(danceClass.getLocation())

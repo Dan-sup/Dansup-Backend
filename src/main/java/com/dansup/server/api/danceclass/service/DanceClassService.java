@@ -1,20 +1,15 @@
 package com.dansup.server.api.danceclass.service;
 
 import com.dansup.server.api.auth.dto.request.GenreRequestDto;
-import com.dansup.server.api.auth.dto.request.HashtagRequestDto;
 import com.dansup.server.api.danceclass.domain.ClassVideo;
 import com.dansup.server.api.danceclass.domain.DanceClass;
 import com.dansup.server.api.danceclass.domain.State;
 import com.dansup.server.api.danceclass.dto.request.CreateDanceClassDto;
-import com.dansup.server.api.danceclass.dto.response.DayResponseDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.repository.ClassVideoRepository;
 import com.dansup.server.api.danceclass.repository.DanceClassRepository;
 import com.dansup.server.api.genre.GenreService;
-import com.dansup.server.api.genre.domain.ClassGenre;
-import com.dansup.server.api.genre.respository.ClassGenreRepository;
-import com.dansup.server.api.genre.respository.GenreRepository;
 import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.api.profile.repository.ProfileRepository;
 import com.dansup.server.api.user.domain.User;
@@ -29,9 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.dansup.server.common.response.ResponseCode.CLASS_NOT_FOUND;
 import static com.dansup.server.common.response.ResponseCode.FAIL_BAD_REQUEST;
 
 @Service
@@ -114,7 +109,10 @@ public class DanceClassService {
                     .title(danceClass.getTitle())
                     .genres(danceClass.getClassGenres().stream().map(
                             profileGenre -> GenreRequestDto.builder()
-                                    .genre(profileGenre.getGenre().getName())
+                                    .genre(
+                                            (profileGenre.getGenre() != null) ?
+                                            profileGenre.getGenre().getName() : null
+                                    )
                                     .build()
                     ).collect(Collectors.toList()))
                     .location(danceClass.getLocation())
@@ -137,70 +135,77 @@ public class DanceClassService {
 
     public void deleteClass(User user, Long classId) throws BaseException {
 
-        Optional<DanceClass> danceClass = danceClassRepository.findById(classId);
+        DanceClass danceClass = danceClassRepository.findById(classId).orElseThrow(
+                () -> new BaseException(CLASS_NOT_FOUND)
+        );
 
-        if(!danceClass.get().getUser().getId().equals(user.getId())){
+        if(!danceClass.getUser().getId().equals(user.getId())){
             throw new BaseException(FAIL_BAD_REQUEST);
         }
 
-        danceClass.get().updateState(State.Delete);
-        danceClassRepository.save(danceClass.get());
+        danceClass.updateState(State.Delete);
+        danceClassRepository.save(danceClass);
     }
 
     public void closeClass(User user, Long classId) throws BaseException{
 
-        Optional<DanceClass> danceClass = danceClassRepository.findById(classId);
+        DanceClass danceClass = danceClassRepository.findById(classId).orElseThrow(
+                () -> new BaseException(CLASS_NOT_FOUND)
+        );
 
-        if(!danceClass.get().getUser().getId().equals(user.getId())){
+        if(!danceClass.getUser().getId().equals(user.getId())){
             throw new BaseException(FAIL_BAD_REQUEST);
         }
 
-        danceClass.get().updateState(State.Closed);
-        danceClassRepository.save(danceClass.get());
+        danceClass.updateState(State.Closed);
+        danceClassRepository.save(danceClass);
     }
 
     public GetDanceClassDto detailClass(User user, Long classId){
 
-        Optional<DanceClass> danceClass = danceClassRepository.findById(classId);
-        Optional<Profile> userprofile = profileRepository.findByUser(danceClass.get().getUser());
-
+        DanceClass danceClass = danceClassRepository.findById(classId).orElseThrow(
+                () -> new BaseException(CLASS_NOT_FOUND)
+        );
+        Profile userprofile = profileRepository.findByUser(danceClass.getUser()).orElseThrow(
+                () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
+        );
 
         GetDanceClassDto getDanceClassDto = GetDanceClassDto.builder()
-                .userId(danceClass.get().getUser().getId())
-                .userNickname(userprofile.get().getNickname())
-                .userProfileImage(userprofile.get().getProfileImage().getUrl())
-                .title(danceClass.get().getTitle())
-                .thumbnailUrl(danceClass.get().getClassVideo().getThumbnailUrl())
-                .videoUrl(danceClass.get().getClassVideo().getVideoUrl())
-                .hashtag1(danceClass.get().getHashtag1())
-                .hashtag2(danceClass.get().getHashtag2())
-                .hashtag3(danceClass.get().getHashtag3())
-                .genres(danceClass.get().getClassGenres().stream().map(
+                .userId(danceClass.getUser().getId())
+                .userNickname(userprofile.getNickname())
+                .userProfileImage(userprofile.getProfileImage().getUrl())
+                .title(danceClass.getTitle())
+                .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                .videoUrl(danceClass.getClassVideo().getVideoUrl())
+                .hashtag1(danceClass.getHashtag1())
+                .hashtag2(danceClass.getHashtag2())
+                .hashtag3(danceClass.getHashtag3())
+                .genres(danceClass.getClassGenres().stream().map(
                                 profileGenre -> GenreRequestDto.builder()
                                         .genre(profileGenre.getGenre().getName())
                                         .build()
                 ).collect(Collectors.toList()))
-                .location(danceClass.get().getLocation())
-                .difficulty(danceClass.get().getDifficulty().toString())
-                .tuition(danceClass.get().getTuition())
-                .maxPeople(danceClass.get().getMaxPeople())
-                .song(danceClass.get().getSong())
-                .detail1(danceClass.get().getDetail1())
-                .detail2(danceClass.get().getDetail2())
-                .detail3(danceClass.get().getDetail3())
-                .method(danceClass.get().getMethod().toString())
-                .mon(danceClass.get().isMon())
-                .tue(danceClass.get().isTue())
-                .wed(danceClass.get().isWed())
-                .thu(danceClass.get().isThu())
-                .fri(danceClass.get().isFri())
-                .sat(danceClass.get().isSat())
-                .sun(danceClass.get().isSun())
-                .startTime(danceClass.get().getStartTime())
-                .endTime(danceClass.get().getEndTime())
-                .date(danceClass.get().getDate())
-                .reserveLink(danceClass.get().getReserveLink())
-                .state(danceClass.get().getState().toString())
+                .location(danceClass.getLocation())
+                .difficulty(danceClass.getDifficulty().toString())
+                .tuition(danceClass.getTuition())
+                .maxPeople(danceClass.getMaxPeople())
+                .song(danceClass.getSong())
+                .detail1(danceClass.getDetail1())
+                .detail2(danceClass.getDetail2())
+                .detail3(danceClass.getDetail3())
+                .method(danceClass.getMethod().toString())
+                .mon(danceClass.isMon())
+                .tue(danceClass.isTue())
+                .wed(danceClass.isWed())
+                .thu(danceClass.isThu())
+                .fri(danceClass.isFri())
+                .sat(danceClass.isSat())
+                .sun(danceClass.isSun())
+                .startTime(danceClass.getStartTime())
+                .endTime(danceClass.getEndTime())
+                .date(danceClass.getDate())
+                .reserveLink(danceClass.getReserveLink())
+                .state(danceClass.getState().toString())
                 .build();
 
         return getDanceClassDto;

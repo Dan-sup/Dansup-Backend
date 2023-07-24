@@ -9,7 +9,7 @@ import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
-import com.dansup.server.api.profile.dto.response.GetProfileDto;
+import com.dansup.server.api.profile.dto.response.GetProfileListDto;
 import com.dansup.server.api.profile.repository.ProfileRepository;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.response.ResponseCode;
@@ -29,7 +29,7 @@ public class ProfileService {
     private final DanceClassRepository danceClassRepository;
 
 
-    public GetProfileDetailDto getProfile(Long profileId) {
+    public GetProfileDetailDto getProfileDetail(Long profileId) {
 
         Profile profile = loadProfile(profileId);
 
@@ -38,9 +38,12 @@ public class ProfileService {
                 .nickname(profile.getNickname())
                 .intro(profile.getIntro())
                 .genres(profile.getProfileGenres().stream().map(
-                                profileGenre -> GenreRequestDto.builder()
-                                        .genre(profileGenre.getGenre().getName())
-                                        .build()
+                        profileGenre -> GenreRequestDto.builder()
+                                .genre(
+                                        (profileGenre.getGenre() != null) ?
+                                        profileGenre.getGenre().getName() : null
+                                )
+                                .build()
                         ).collect(Collectors.toList())
                 )
                 .hashtag1(profile.getHashtag1())
@@ -51,22 +54,27 @@ public class ProfileService {
                 .build();
     }
 
-    public List<GetProfileDto> getProfileList(String nikcname) {
+    public List<GetProfileListDto> getProfileList(String nickname) {
 
-        List<Profile> profiles = profileRepository.findByNickname(nikcname);
+        List<Profile> profiles = profileRepository.findByNickname(nickname);
 
         return profiles.stream().map(
-                profile -> GetProfileDto.builder()
+                profile -> GetProfileListDto.builder()
+                        .profileId(profile.getId())
                         .nickname(profile.getNickname())
                         .intro(profile.getIntro())
                         .genres(profile.getProfileGenres().stream().map(
                                 profileGenre -> GenreRequestDto.builder()
-                                        .genre(profileGenre.getGenre().getName())
+                                        .genre(
+                                                (profileGenre.getGenre() != null) ?
+                                                profileGenre.getGenre().getName() : null
+                                        )
                                         .build()
                         ).collect(Collectors.toList()))
                         .hashtag1(profile.getHashtag1())
                         .hashtag2(profile.getHashtag2())
                         .hashtag3(profile.getHashtag3())
+                        .profileImage(profile.getProfileImage().getUrl())
                         .build()
         ).collect(Collectors.toList());
     }

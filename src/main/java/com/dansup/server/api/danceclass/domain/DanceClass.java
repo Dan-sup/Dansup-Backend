@@ -101,6 +101,8 @@ public class DanceClass extends BaseEntity {
 
     private String reserveLink;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private State state = State.Active;
 
     public void updateState(State state) {
