@@ -93,28 +93,6 @@ public class DanceClassService {
         log.info("[DanceClass 생성 완료]: DanceClass_title = {}", danceClass.getTitle());
     }
 
-//<<<<<<< HEAD
-//    public List<GetDanceClassListDto> getAllClassList(){
-//
-//        List<DanceClass> classList = new ArrayList<>();
-//        List<GetDanceClassListDto> danceClassListDto = new ArrayList<>();
-//
-//        classList = danceClassRepository.findByState(State.Active);
-//        log.info("classList : {} " , classList.get(0).getTitle());
-//
-//        for(DanceClass danceClass : classList){
-//
-//            log.info("danceClass_ID : {}", danceClass.getId());
-//            List<GenreRequestDto> genreRequestDtos = new ArrayList<>();
-//            List<ClassGenre> genres = classGenreRepository.findByDanceClassId(danceClass.getId());
-//            log.info("genres : {}", genres.get(0).getGenre().getName());
-//            genres.forEach(classGenre -> {
-//                log.info("classgenre : {}", classGenre.getId());
-//                genreRequestDtos.add(GenreRequestDto.builder().genre(classGenre.getGenre().getName()).build());
-//            });
-//            log.info("genres : {}", genreRequestDtos);
-
-
     public List<GetDanceClassListDto> getAllClassList(User user){
 
         List<DanceClass> classList = danceClassRepository.findByState(State.Active);
