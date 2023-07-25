@@ -64,11 +64,11 @@ public class DanceClassController {
     }
 
     @ApiOperation(value = "Get DanceClass", notes = "댄스 수업 상세 조회")
-    @GetMapping(value = "/{danceclassId}")
+    @GetMapping(value = "/{classId}")
     public Response<GetDanceClassDto> getDanceClass(@AuthUser User user,
-                                                    @PathVariable("danceclassId") Long danceclassId) {
+                                                    @PathVariable("classId") Long classId) {
 
-        GetDanceClassDto getDanceClassDto = danceClassService.detailClass(user, danceclassId);
+        GetDanceClassDto getDanceClassDto = danceClassService.detailClass(user, classId);
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassDto);
     }
 }
