@@ -41,34 +41,25 @@ public class DanceClassController {
 
     @ApiOperation(value = "Get DanceClassList", notes = "댄스 수업 리스트 조회")
     @GetMapping(value = "")
-    public Response<List<GetDanceClassListDto>> getDanceClassList(@AuthUser User user) {
-        List<GetDanceClassListDto> danceClassListDto = danceClassService.getAllClassList(user);
+    public Response<List<GetDanceClassListDto>> getDanceClassList() {
+        List<GetDanceClassListDto> danceClassListDto = danceClassService.getAllClassList();
         Collections.reverse(danceClassListDto);
 
         return Response.success(ResponseCode.SUCCESS_OK, danceClassListDto);
     }
 
     @ApiOperation(value = "Filter DanceClass", notes = "필터링(검색 or 필터)을 통한 수업 리스트 조회")
-    @GetMapping("/filters")
-    public ResponseEntity<List<GetDanceClassListDto>> getDanceClassListByFilter(@RequestParam("word") String word,
-                                                                                @RequestBody DanceClassFilterDto danceClassFilterDto) {
-        //  (1) 검색어(word)
-        //  word 검색시 2가지 로직 필요
-        //  word는
-        //  댄스 수업의 title 로 Filtering
-        //  댄서 nickname 로 Filtering
-
-        // (2) FilterDto
-        //  FilterDto를 통해 Filtering
-        return ResponseEntity.ok(new ArrayList<GetDanceClassListDto>());
+    @PostMapping("/filters")
+    public Response<List<GetDanceClassListDto>> getDanceClassListByFilter(@RequestParam(value = "title", required = false) String title,
+                                                                          @RequestBody(required = false) DanceClassFilterDto danceClassFilterDto) {
+        List<GetDanceClassListDto> getDanceClassListDtos = danceClassService.getDanceClassListByFilter(title, danceClassFilterDto);
+        return Response.success(ResponseCode.SUCCESS_OK, getDanceClassListDtos);
     }
 
     @ApiOperation(value = "Get DanceClass", notes = "댄스 수업 상세 조회")
-    @GetMapping(value = "/{danceclassId}")
-    public Response<GetDanceClassDto> getDanceClass(@AuthUser User user,
-                                                    @PathVariable("danceclassId") Long danceclassId) {
-
-        GetDanceClassDto getDanceClassDto = danceClassService.detailClass(user, danceclassId);
+    @GetMapping(value = "/{classId}")
+    public Response<GetDanceClassDto> getDanceClass(@PathVariable("danceclassId") Long danceclassId) {
+        GetDanceClassDto getDanceClassDto = danceClassService.detailClass(danceclassId);
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassDto);
     }
 }

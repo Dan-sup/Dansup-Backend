@@ -72,7 +72,7 @@ public class CreateDanceClassDto {
     @NotBlank
     private Method method;
 
-    @ApiModelProperty(value = "수업 요일 선택" , example = "월 = True", notes = "선택된 날짜를 true 로 변경해서 보내주세요!")
+    @ApiModelProperty(value = "수업 요일 선택", notes = "선택된 날짜를 true 로 변경해서 보내주세요!")
     private DayRequestDto days;
 
     @ApiModelProperty(value = "수업 시작 시간" , example = "20")

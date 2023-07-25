@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface DanceClassRepository extends JpaRepository<DanceClass, Long> {
+@Repository("danceClassRepositorySupport")
+public interface DanceClassRepository extends JpaRepository<DanceClass, Long>, DanceClassRepositoryCustom {
     Optional<DanceClass> findById(Long dance_class_id);
     List<DanceClass> findByState(State state);
 
