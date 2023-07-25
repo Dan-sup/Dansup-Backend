@@ -5,6 +5,7 @@ import com.dansup.server.api.danceclass.domain.ClassVideo;
 import com.dansup.server.api.danceclass.domain.DanceClass;
 import com.dansup.server.api.danceclass.domain.State;
 import com.dansup.server.api.danceclass.dto.request.CreateDanceClassDto;
+import com.dansup.server.api.danceclass.dto.request.DanceClassFilterDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.repository.ClassVideoRepository;
@@ -88,49 +89,11 @@ public class DanceClassService {
         log.info("[DanceClass 생성 완료]: DanceClass_title = {}", danceClass.getTitle());
     }
 
-    public List<GetDanceClassListDto> getAllClassList(User user){
+    public List<GetDanceClassListDto> getAllClassList(){
 
-        List<DanceClass> classList = danceClassRepository.findByState(State.Active);
-        List<GetDanceClassListDto> danceClassListDto = new ArrayList<>();
+        List<DanceClass> danceClasses = danceClassRepository.findByState(State.Active);
 
-        Profile profile;
-
-        for(DanceClass danceClass : classList){
-
-            profile = profileRepository.findByUser(danceClass.getUser()).orElseThrow(
-                    () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
-            );
-
-            danceClassListDto.add(GetDanceClassListDto.builder()
-                    .userId(danceClass.getUser().getId())
-                    .userNickname(profile.getNickname())
-                    .userProfileImage(profile.getProfileImage().getUrl())
-                    .danceClassId(danceClass.getId())
-                    .title(danceClass.getTitle())
-                    .genres(danceClass.getClassGenres().stream().map(
-                            profileGenre -> GenreRequestDto.builder()
-                                    .genre(
-                                            (profileGenre.getGenre() != null) ?
-                                            profileGenre.getGenre().getName() : null
-                                    )
-                                    .build()
-                    ).collect(Collectors.toList()))
-                    .location(danceClass.getLocation())
-                    .method(danceClass.getMethod().toString())
-                    .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
-                    .mon(danceClass.isMon())
-                    .tue(danceClass.isTue())
-                    .wed(danceClass.isWed())
-                    .thu(danceClass.isThu())
-                    .fri(danceClass.isFri())
-                    .sat(danceClass.isSat())
-                    .sun(danceClass.isSun())
-                    .date(danceClass.getDate())
-                    .state(danceClass.getState().toString()).build()
-            );
-        }
-
-        return danceClassListDto;
+        return createDanceClassListDtos(danceClasses);
     }
 
     public void deleteClass(User user, Long classId) throws BaseException {
@@ -161,7 +124,7 @@ public class DanceClassService {
         danceClassRepository.save(danceClass);
     }
 
-    public GetDanceClassDto detailClass(User user, Long classId){
+    public GetDanceClassDto detailClass(Long classId){
 
         DanceClass danceClass = danceClassRepository.findById(classId).orElseThrow(
                 () -> new BaseException(CLASS_NOT_FOUND)
@@ -212,6 +175,67 @@ public class DanceClassService {
                 .build();
 
         return getDanceClassDto;
+    }
+
+
+    public List<GetDanceClassListDto> getDanceClassListByFilter(String title, DanceClassFilterDto danceClassFilterDto) {
+
+        List<DanceClass> danceClasses = new ArrayList<>();
+
+        if(title != null && danceClassFilterDto == null) {
+            danceClasses = danceClassRepository.findDanceClass(title);
+        } else if (title == null && danceClassFilterDto != null) {
+            danceClasses = danceClassRepository.findDanceClass(danceClassFilterDto);
+        } else if (title != null && danceClassFilterDto != null){
+            danceClasses = danceClassRepository.findDanceClass(title, danceClassFilterDto);
+        } else {
+            throw new BaseException(FAIL_BAD_REQUEST);
+        }
+
+        return createDanceClassListDtos(danceClasses);
+    }
+
+    private List<GetDanceClassListDto> createDanceClassListDtos(List<DanceClass> danceClasses) {
+        List<GetDanceClassListDto> danceClassListDtos = new ArrayList<>();
+        Profile profile;
+
+        for(DanceClass danceClass : danceClasses) {
+
+            profile = profileRepository.findByUser(danceClass.getUser()).orElseThrow(
+                    () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
+            );
+
+            danceClassListDtos.add(GetDanceClassListDto.builder()
+                    .userId(danceClass.getUser().getId())
+                    .userNickname(profile.getNickname())
+                    .userProfileImage(profile.getProfileImage().getUrl())
+                    .danceClassId(danceClass.getId())
+                    .title(danceClass.getTitle())
+                    .genres(danceClass.getClassGenres().stream().map(
+                            profileGenre -> GenreRequestDto.builder()
+                                    .genre(
+                                            (profileGenre.getGenre() != null) ?
+                                                    profileGenre.getGenre().getName() : null
+                                    )
+                                    .build()
+                    ).collect(Collectors.toList()))
+                    .location(danceClass.getLocation())
+                    .method(danceClass.getMethod().toString())
+                    .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                    .mon(danceClass.isMon())
+                    .tue(danceClass.isTue())
+                    .wed(danceClass.isWed())
+                    .thu(danceClass.isThu())
+                    .fri(danceClass.isFri())
+                    .sat(danceClass.isSat())
+                    .sun(danceClass.isSun())
+                    .date(danceClass.getDate())
+                    .state(danceClass.getState().toString()).build()
+            );
+        }
+
+        return danceClassListDtos;
+
     }
 
 }

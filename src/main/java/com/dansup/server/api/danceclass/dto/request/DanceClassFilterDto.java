@@ -14,38 +14,33 @@ import java.util.List;
 public class DanceClassFilterDto {
 
     @ApiModelProperty(value = "수업 장소" , example = "강남구")
-    private String local;
+    private String location;
 
     @ApiModelProperty(value = "수업 장르" , example = "락킹")
     private List<GenreRequestDto> genres;
 
-    @ApiModelProperty(value = "월요일 선택" , example = "1")
-    private boolean mon;
-    @ApiModelProperty(value = "화요일 선택" , example = "1")
-    private boolean tue;
-    @ApiModelProperty(value = "수요일 선택" , example = "1")
-    private boolean wed;
-    @ApiModelProperty(value = "목요일 선택" , example = "1")
-    private boolean thu;
-    @ApiModelProperty(value = "금요일 선택" , example = "1")
-    private boolean fri;
-    @ApiModelProperty(value = "토요일 선택" , example = "1")
-    private boolean sat;
-    @ApiModelProperty(value = "일요일 선택" , example = "1")
-    private boolean sun;
+    @ApiModelProperty(value = "수업 요일 선택" , notes = "선택된 날짜를 true 로 변경해서 보내주세요!")
+    private DayRequestDto days;
+
+    @ApiModelProperty(value = "수업 시간대" , example = "오전-오후")
+    private String time;
 
     @ApiModelProperty(value = "수업 시작 시간" , example = "20")
-    private int startTime;
+    private Integer startTime;
 
     @ApiModelProperty(value = "수업 종료 시간" , example = "22")
-    private int endTime;
+    private Integer endTime;
 
-    @ApiModelProperty(value = "수업 방식" , example = "O")
+    @ApiModelProperty(value = "수업 방식" , example = "OD")
     private Method method;
 
     @ApiModelProperty(value = "수업 난이도" , example = "BA")
     private Difficulty difficulty;
 
-    @ApiModelProperty(value = "수업 수강료 - ~원 미만" , example = "30000")
-    private int tuition;
+    @ApiModelProperty(value = "수업 수강료(~이상)" , example = "30000")
+    private Integer minTuition;
+
+    @ApiModelProperty(value = "수업 수강료(~이하)" , example = "60000")
+    private Integer maxTuition;
+
 }
