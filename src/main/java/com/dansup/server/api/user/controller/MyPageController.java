@@ -46,6 +46,16 @@ public class MyPageController {
         return Response.success(ResponseCode.SUCCESS_OK, getProfileDetailDto);
     }
 
+    @ApiOperation(value = "Create PortfolioVideo", notes = "마이페이지에서 포트폴리오 영상 업로드")
+    @PostMapping(value = "/portfolio/video",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response<Void> createPortfolioVideo(@AuthUser User user,
+                                               @RequestParam(required = false) MultipartFile videoFile) throws IOException {
+
+        myPageService.uploadPortfolioVideo(user, videoFile);
+
+        return Response.success(ResponseCode.SUCCESS_CREATED);
+    }
+
     @ApiOperation(value = "Get Mypage Portfolio", notes = "마이페이지에서 포트폴리오(공연 및 활동 경력) 조회")
     @GetMapping(value = "/portfolio")
     public Response<List<GetPortfolioDto>> getPortfolioList(@AuthUser User user) {

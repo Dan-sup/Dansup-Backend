@@ -5,20 +5,27 @@ import com.dansup.server.api.danceclass.domain.DanceClass;
 import com.dansup.server.api.danceclass.domain.State;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.repository.DanceClassRepository;
+import com.dansup.server.api.profile.domain.PortfolioVideo;
 import com.dansup.server.api.profile.domain.Profile;
+import com.dansup.server.api.profile.domain.ProfileVideo;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
+import com.dansup.server.api.profile.repository.PortfolioRepository;
+import com.dansup.server.api.profile.repository.PortfolioVideoRepository;
 import com.dansup.server.api.profile.repository.ProfileRepository;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.response.ResponseCode;
+import com.dansup.server.config.s3.S3UploaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +39,10 @@ public class MyPageService {
     private final ProfileRepository profileRepository;
 
     private final DanceClassRepository danceClassRepository;
+
+    private final S3UploaderService s3UploaderService;
+
+    private final PortfolioVideoRepository portfolioVideoRepository;
 
     public GetProfileDetailDto getMyPage(User user) {
 
@@ -113,6 +124,19 @@ public class MyPageService {
                         .state(danceClass.getState().toString())
                         .build()
         ).collect(Collectors.toList());
+    }
+
+    public void uploadPortfolioVideo(User user, MultipartFile multipartFile) throws IOException {
+
+        Profile myPage = loadMyPage(user);
+
+        String videoUrl = s3UploaderService.videoUpload(multipartFile);
+        PortfolioVideo portfolioVideo = PortfolioVideo.builder()
+                                                .url(videoUrl)
+                                                .profile(myPage)
+                                                .build();
+
+        portfolioVideoRepository.save(portfolioVideo);
     }
 
     private Profile loadMyPage(User user) {
