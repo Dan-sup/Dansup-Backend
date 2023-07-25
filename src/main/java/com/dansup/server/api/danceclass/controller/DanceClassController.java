@@ -60,6 +60,7 @@ public class DanceClassController {
     @GetMapping(value = "/{classId}")
     public Response<GetDanceClassDto> getDanceClass(@PathVariable("classId") Long classId) {
         GetDanceClassDto getDanceClassDto = danceClassService.detailClass(classId);
+
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassDto);
     }
 }
