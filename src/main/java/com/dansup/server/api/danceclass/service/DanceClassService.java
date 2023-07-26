@@ -182,16 +182,11 @@ public class DanceClassService {
 
         List<DanceClass> danceClasses = new ArrayList<>();
 
-        if(title != null && danceClassFilterDto == null) {
-            danceClasses = danceClassRepository.findDanceClass(title);
-        } else if (title == null && danceClassFilterDto != null) {
+        if(title == null) {
             danceClasses = danceClassRepository.findDanceClass(danceClassFilterDto);
-        } else if (title != null && danceClassFilterDto != null){
-            danceClasses = danceClassRepository.findDanceClass(title, danceClassFilterDto);
         } else {
-            throw new BaseException(FAIL_BAD_REQUEST);
+            danceClasses = danceClassRepository.findDanceClass(title, danceClassFilterDto);
         }
-
         return createDanceClassListDtos(danceClasses);
     }
 
