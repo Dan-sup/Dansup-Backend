@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(swagger).permitAll()
                 .antMatchers(HttpMethod.GET, "/classes/**").permitAll()
-                .antMatchers("/classes/filters/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/classes/filters/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/profile/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/reissuance").permitAll()
                 .antMatchers("/auth/reissuance").permitAll()
