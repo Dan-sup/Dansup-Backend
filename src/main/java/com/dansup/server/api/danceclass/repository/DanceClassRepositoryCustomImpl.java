@@ -39,9 +39,7 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
         QClassGenre classGenre = QClassGenre.classGenre;
 
         return from(danceClass)
-                .leftJoin(danceClass.classGenres, classGenre).on(
-                        genreIn(classGenre, joinClassGenres(danceClassFilterDto.getGenres()))
-                )
+                .leftJoin(danceClass.classGenres, classGenre)
                 .where(
                         locationContains(danceClass, danceClassFilterDto.getLocation()),
                         daysEq(danceClass, danceClassFilterDto.getDays()),
@@ -50,8 +48,10 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
                         methodEq(danceClass, danceClassFilterDto.getMethod()),
                         difficultyEq(danceClass, danceClassFilterDto.getDifficulty()),
                         tuitionBetween(danceClass, danceClassFilterDto.getMinTuition(), danceClassFilterDto.getMaxTuition()),
-                        danceClass.state.eq(State.Active)
+                        danceClass.state.eq(State.Active),
+                        genreIn(classGenre, getClassGenres(danceClassFilterDto.getGenres()))
                 )
+                .distinct()
                 .fetch();
     }
 
@@ -61,9 +61,7 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
         QClassGenre classGenre = QClassGenre.classGenre;
 
         return from(danceClass)
-                .leftJoin(danceClass.classGenres, classGenre).on(
-                        genreIn(classGenre, joinClassGenres(danceClassFilterDto.getGenres()))
-                )
+                .leftJoin(danceClass.classGenres, classGenre)
                 .where(
                         danceClass.title.contains(title),
                         locationContains(danceClass, danceClassFilterDto.getLocation()),
@@ -73,8 +71,10 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
                         methodEq(danceClass, danceClassFilterDto.getMethod()),
                         difficultyEq(danceClass, danceClassFilterDto.getDifficulty()),
                         tuitionBetween(danceClass, danceClassFilterDto.getMinTuition(), danceClassFilterDto.getMaxTuition()),
-                        danceClass.state.eq(State.Active)
+                        danceClass.state.eq(State.Active),
+                        genreIn(classGenre, getClassGenres(danceClassFilterDto.getGenres()))
                 )
+                .distinct()
                 .fetch();
     }
 
@@ -180,10 +180,10 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
 
     private BooleanExpression genreIn(QClassGenre classGenre, List<String> genres) {
         log.info("[genres is Empty]: {}", genres.isEmpty());
-        return (!genres.isEmpty()) ? classGenre.genre.name.in(genres) : classGenre.genre.id.isNotNull();
+        return (!genres.isEmpty()) ? classGenre.genre.name.in(genres) : null;
     }
 
-    private List<String> joinClassGenres(List<GenreRequestDto> genres) {
+    private List<String> getClassGenres(List<GenreRequestDto> genres) {
         List<String> genreList = new ArrayList<>();
         log.info("[genres]: {}", genres);
 
