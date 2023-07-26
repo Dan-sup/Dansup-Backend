@@ -5,6 +5,7 @@ import com.dansup.server.api.danceclass.domain.*;
 import com.dansup.server.api.danceclass.dto.request.DanceClassFilterDto;
 import com.dansup.server.api.danceclass.dto.request.DayRequestDto;
 import com.dansup.server.api.genre.domain.QClassGenre;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -22,18 +23,6 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
     }
 
     @Override
-    public List<DanceClass> findDanceClass(String title) {
-        QDanceClass danceClass = QDanceClass.danceClass;
-
-        return from(danceClass)
-                .where(
-                        danceClass.title.contains(title),
-                        danceClass.state.eq(State.Active)
-                )
-                .fetch();
-    }
-
-    @Override
     public List<DanceClass> findDanceClass(DanceClassFilterDto danceClassFilterDto) {
         QDanceClass danceClass = QDanceClass.danceClass;
         QClassGenre classGenre = QClassGenre.classGenre;
@@ -42,7 +31,13 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
                 .leftJoin(danceClass.classGenres, classGenre)
                 .where(
                         locationContains(danceClass, danceClassFilterDto.getLocation()),
-                        daysEq(danceClass, danceClassFilterDto.getDays()),
+                        monEq(danceClass, danceClassFilterDto.getDays()),
+                        tueEq(danceClass, danceClassFilterDto.getDays()),
+                        wedEq(danceClass, danceClassFilterDto.getDays()),
+                        thuEq(danceClass, danceClassFilterDto.getDays()),
+                        friEq(danceClass, danceClassFilterDto.getDays()),
+                        satEq(danceClass, danceClassFilterDto.getDays()),
+                        sunEq(danceClass, danceClassFilterDto.getDays()),
                         startTimeEq(danceClass, danceClassFilterDto.getStartTime(), danceClassFilterDto.getTime()),
                         endTimeEq(danceClass, danceClassFilterDto.getEndTime(), danceClassFilterDto.getTime()),
                         methodEq(danceClass, danceClassFilterDto.getMethod()),
@@ -65,7 +60,13 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
                 .where(
                         danceClass.title.contains(title),
                         locationContains(danceClass, danceClassFilterDto.getLocation()),
-                        daysEq(danceClass, danceClassFilterDto.getDays()),
+                        monEq(danceClass, danceClassFilterDto.getDays()),
+                        tueEq(danceClass, danceClassFilterDto.getDays()),
+                        wedEq(danceClass, danceClassFilterDto.getDays()),
+                        thuEq(danceClass, danceClassFilterDto.getDays()),
+                        friEq(danceClass, danceClassFilterDto.getDays()),
+                        satEq(danceClass, danceClassFilterDto.getDays()),
+                        sunEq(danceClass, danceClassFilterDto.getDays()),
                         startTimeEq(danceClass, danceClassFilterDto.getStartTime(), danceClassFilterDto.getTime()),
                         endTimeEq(danceClass, danceClassFilterDto.getEndTime(), danceClassFilterDto.getTime()),
                         methodEq(danceClass, danceClassFilterDto.getMethod()),
@@ -82,34 +83,36 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
         return (location != null) ? danceClass.location.contains(location) : null;
     }
 
-    private BooleanExpression daysEq(QDanceClass danceClass, DayRequestDto days) {
-        BooleanExpression booleanExpression = danceClass.id.isNotNull();
 
-        if(days.isMon()) {
-            booleanExpression.and(danceClass.mon.eq(true));
-        }
-        if(days.isTue()) {
-            booleanExpression.and(danceClass.tue.eq(true));
-        }
-        if(days.isWed()) {
-            booleanExpression.and(danceClass.wed.eq(true));
-        }
-        if(days.isThu()) {
-            booleanExpression.and(danceClass.thu.eq(true));
-        }
-        if(days.isFri()) {
-            booleanExpression.and(danceClass.fri.eq(true));
-        }
-        if(days.isSat()) {
-            booleanExpression.and(danceClass.sat.eq(true));
-        }
-        if(days.isSun()) {
-            booleanExpression.and(danceClass.sun.eq(true));
-        }
-
-        return booleanExpression;
-
+    private BooleanExpression monEq(QDanceClass danceClass, DayRequestDto days) {
+        log.info("[days null]: {}", days == null);
+        return (days != null && days.isMon()) ? danceClass.mon.isTrue() : null;
     }
+
+    private BooleanExpression tueEq(QDanceClass danceClass, DayRequestDto days) {
+        return (days != null && days.isTue()) ? danceClass.tue.isTrue() : null;
+    }
+
+    private BooleanExpression wedEq(QDanceClass danceClass, DayRequestDto days) {
+        return (days != null && days.isWed()) ? danceClass.wed.isTrue() : null;
+    }
+
+    private BooleanExpression thuEq(QDanceClass danceClass, DayRequestDto days) {
+        return (days != null && days.isThu()) ? danceClass.thu.isTrue() : null;
+    }
+
+    private BooleanExpression friEq(QDanceClass danceClass, DayRequestDto days) {
+        return (days != null && days.isFri()) ? danceClass.fri.isTrue() : null;
+    }
+
+    private BooleanExpression satEq(QDanceClass danceClass, DayRequestDto days) {
+        return (days != null && days.isSat()) ? danceClass.sat.isTrue() : null;
+    }
+
+    private BooleanExpression sunEq(QDanceClass danceClass, DayRequestDto days) {
+        return (days != null && days.isSun()) ? danceClass.sun.isTrue() : null;
+    }
+
     private BooleanExpression startTimeEq(QDanceClass danceClass, Integer startTime, String time) {
         if(startTime != null && time == null) {
             return danceClass.startTime.eq(startTime);
