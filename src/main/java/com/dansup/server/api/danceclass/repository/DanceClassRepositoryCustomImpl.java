@@ -83,9 +83,7 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
         return (location != null) ? danceClass.location.contains(location) : null;
     }
 
-
     private BooleanExpression monEq(QDanceClass danceClass, DayRequestDto days) {
-        log.info("[days null]: {}", days == null);
         return (days != null && days.isMon()) ? danceClass.mon.isTrue() : null;
     }
 
