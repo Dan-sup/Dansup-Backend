@@ -122,7 +122,7 @@ public class ProfileService {
                                         .build()
                         ).collect(Collectors.toList()))
                         .location(danceClass.getLocation())
-                        .method(danceClass.getMethod().toString())
+                        .method(danceClass.getMethod().getMethod())
                         .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
                         .mon(danceClass.isMon())
                         .tue(danceClass.isTue())
