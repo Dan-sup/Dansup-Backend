@@ -83,33 +83,32 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
         return (location != null) ? danceClass.location.contains(location) : null;
     }
 
-
     private BooleanExpression monEq(QDanceClass danceClass, DayRequestDto days) {
-        return (days != null) ? danceClass.mon.eq(true) : null;
+        return (days != null && days.isMon()) ? danceClass.mon.isTrue() : null;
     }
 
     private BooleanExpression tueEq(QDanceClass danceClass, DayRequestDto days) {
-        return (days != null) ? danceClass.tue.eq(true) : null;
+        return (days != null && days.isTue()) ? danceClass.tue.isTrue() : null;
     }
 
     private BooleanExpression wedEq(QDanceClass danceClass, DayRequestDto days) {
-        return (days != null) ? danceClass.wed.eq(true) : null;
+        return (days != null && days.isWed()) ? danceClass.wed.isTrue() : null;
     }
 
     private BooleanExpression thuEq(QDanceClass danceClass, DayRequestDto days) {
-        return (days != null) ? danceClass.thu.eq(true) : null;
+        return (days != null && days.isThu()) ? danceClass.thu.isTrue() : null;
     }
 
     private BooleanExpression friEq(QDanceClass danceClass, DayRequestDto days) {
-        return (days != null) ? danceClass.fri.eq(true) : null;
+        return (days != null && days.isFri()) ? danceClass.fri.isTrue() : null;
     }
 
     private BooleanExpression satEq(QDanceClass danceClass, DayRequestDto days) {
-        return (days != null) ? danceClass.sat.eq(true) : null;
+        return (days != null && days.isSat()) ? danceClass.sat.isTrue() : null;
     }
 
     private BooleanExpression sunEq(QDanceClass danceClass, DayRequestDto days) {
-        return (days != null) ? danceClass.sun.eq(true) : null;
+        return (days != null && days.isSun()) ? danceClass.sun.isTrue() : null;
     }
 
     private BooleanExpression startTimeEq(QDanceClass danceClass, Integer startTime, String time) {
