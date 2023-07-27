@@ -15,4 +15,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Optional<Profile> findById(Long profileId);
 
     List<Profile> findByNickname(String nickname);
+
+    boolean existsByUsername(String username);
 }
