@@ -64,6 +64,10 @@ public class AuthService {
                 () -> new BaseException(ResponseCode.USER_NOT_FOUND)
         );
 
+        if(profileRepository.existsByUsername(signUpDto.getUsername())) {
+            throw new BaseException(ResponseCode.DUPLICATE_NICKNAME);
+        }
+
         Profile profile = Profile.builder()
                 .user(findUser)
                 .profileImage(createProfileImage(profileImage))

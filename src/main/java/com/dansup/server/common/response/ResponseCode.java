@@ -25,6 +25,7 @@ public enum ResponseCode {
     USER_NOT_FOUND(UNAUTHORIZED, "사용자를 찾을 수 없습니다."),
     TOKEN_NOT_VALID(UNAUTHORIZED, "토큰 유효성 검사에 실패하였습니다."),
     ACCESS_DENIED(UNAUTHORIZED, "접근이 금지되었습니다."),
+    DUPLICATE_NICKNAME(BAD_REQUEST, "중복된 사용자 계정명입니다."),
 
     REFRESH_TOKEN_NOT_FOUND(UNAUTHORIZED, "리프레쉬 토큰이 만료되었습니다"),
 
