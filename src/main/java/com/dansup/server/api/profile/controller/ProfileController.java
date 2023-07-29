@@ -13,6 +13,7 @@ import com.dansup.server.common.response.ResponseCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class ProfileController {
 
     @ApiOperation(value = "Get Dancer Classes", notes = "댄서 프로필에서 운영 중인 수업 조회")
     @GetMapping(value = "/{profileId}/class")
-    public Response<List<GetDanceClassListDto>> getProfileClassList(@AuthUser User user, @PathVariable("profileId") Long profileId) {
+    public Response<List<GetDanceClassListDto>> getProfileClassList(@AuthenticationPrincipal User user, @PathVariable("profileId") Long profileId) {
         List<GetDanceClassListDto> getDanceClassListDtos = profileService.getDanceClassList(user, profileId);
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassListDtos);
     }
