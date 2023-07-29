@@ -52,8 +52,9 @@ public class DanceClassController {
     @PostMapping("/filters")
     public Response<List<GetDanceClassListDto>> getDanceClassListByFilter(@RequestParam(value = "title", required = false) String title,
                                                                           @RequestBody(required = false) DanceClassFilterDto danceClassFilterDto) {
-        List<GetDanceClassListDto> getDanceClassListDtos = danceClassService.getDanceClassListByFilter(title, danceClassFilterDto);
-        return Response.success(ResponseCode.SUCCESS_OK, getDanceClassListDtos);
+        List<GetDanceClassListDto> danceClassListDto = danceClassService.getDanceClassListByFilter(title, danceClassFilterDto);
+        Collections.reverse(danceClassListDto);
+        return Response.success(ResponseCode.SUCCESS_OK, danceClassListDto);
     }
 
     @ApiOperation(value = "Get DanceClass", notes = "댄스 수업 상세 조회")

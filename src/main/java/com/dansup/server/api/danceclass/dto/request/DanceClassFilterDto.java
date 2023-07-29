@@ -26,10 +26,10 @@ public class DanceClassFilterDto {
     private String time;
 
     @ApiModelProperty(value = "수업 시작 시간" , example = "20")
-    private Integer startTime;
+    private Integer startHour;
 
     @ApiModelProperty(value = "수업 종료 시간" , example = "22")
-    private Integer endTime;
+    private Integer endHour;
 
     @ApiModelProperty(value = "수업 방식" , example = "OD")
     private Method method;

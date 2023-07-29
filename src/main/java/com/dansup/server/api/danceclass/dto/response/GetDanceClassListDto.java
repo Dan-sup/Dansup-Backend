@@ -43,8 +43,11 @@ public class GetDanceClassListDto {
     @ApiModelProperty(value = "수업 방식" , example = "OD")
     private String method;
 
-    @ApiModelProperty(value = "수업 영상 thumbnail" , example = "Url")
-    private String thumbnailUrl;
+//    @ApiModelProperty(value = "수업 영상 thumbnail" , example = "Url")
+//    private String thumbnailUrl;
+
+    @ApiModelProperty(value = "수업 영상 Url" , example = "Url")
+    private String videoUrl;
 
     @ApiModelProperty(value = "월요일" , example = "true")
     private boolean mon;

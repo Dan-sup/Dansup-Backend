@@ -1,7 +1,6 @@
 package com.dansup.server.api.danceclass.domain;
 
 import com.dansup.server.api.genre.domain.ClassGenre;
-import com.dansup.server.api.genre.domain.ProfileGenre;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.common.BaseEntity;
 import lombok.AllArgsConstructor;
@@ -90,12 +89,20 @@ public class DanceClass extends BaseEntity {
     private boolean sun;
 
     @Column(nullable = false)
-    @NotNull(message = "수업 시작시간은 필수 값입니다.")
-    private int startTime;
+    @NotNull(message = "수업 시작 Hour 는 필수 값입니다..")
+    private int startHour;
 
     @Column(nullable = false)
-    @NotNull(message = "수업 종료시간은 필수 값입니다.")
-    private int endTime;
+    @NotBlank(message = "수업 시작시간은 필수 값입니다.")
+    private String startTime;
+
+    @Column(nullable = false)
+    @NotNull(message = "수업 종료 Hour 는 필수 값입니다.")
+    private int endHour;
+
+    @Column(nullable = false)
+    @NotBlank(message = "수업 종료시간은 필수 값입니다.")
+    private String endTime;
 
     private String date;
 

@@ -112,7 +112,7 @@ public class MyPageService {
                         ).collect(Collectors.toList()))
                         .location(danceClass.getLocation())
                         .method(danceClass.getMethod().getMethod())
-                        .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                        .videoUrl(danceClass.getClassVideo().getVideoUrl())
                         .mon(danceClass.isMon())
                         .tue(danceClass.isTue())
                         .wed(danceClass.isWed())

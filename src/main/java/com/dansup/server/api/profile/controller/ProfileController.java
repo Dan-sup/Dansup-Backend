@@ -6,6 +6,8 @@ import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
 import com.dansup.server.api.profile.dto.response.GetProfileListDto;
 import com.dansup.server.api.profile.service.ProfileService;
+import com.dansup.server.api.user.domain.User;
+import com.dansup.server.common.AuthUser;
 import com.dansup.server.common.response.Response;
 import com.dansup.server.common.response.ResponseCode;
 import io.swagger.annotations.Api;
@@ -52,8 +54,8 @@ public class ProfileController {
 
     @ApiOperation(value = "Get Dancer Classes", notes = "댄서 프로필에서 운영 중인 수업 조회")
     @GetMapping(value = "/{profileId}/class")
-    public Response<List<GetDanceClassListDto>> getProfileClassList(@PathVariable("profileId") Long profileId) {
-        List<GetDanceClassListDto> getDanceClassListDtos = profileService.getDanceClassList(profileId);
+    public Response<List<GetDanceClassListDto>> getProfileClassList(@AuthUser User user, @PathVariable("profileId") Long profileId) {
+        List<GetDanceClassListDto> getDanceClassListDtos = profileService.getDanceClassList(user, profileId);
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassListDtos);
     }
 

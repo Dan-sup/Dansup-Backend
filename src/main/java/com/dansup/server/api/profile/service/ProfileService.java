@@ -11,12 +11,14 @@ import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
 import com.dansup.server.api.profile.dto.response.GetProfileListDto;
 import com.dansup.server.api.profile.repository.ProfileRepository;
+import com.dansup.server.api.user.domain.User;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,11 +102,19 @@ public class ProfileService {
         ).collect(Collectors.toList());
     }
 
-    public List<GetDanceClassListDto> getDanceClassList(Long profileId) {
+    public List<GetDanceClassListDto> getDanceClassList(User user, Long profileId) {
 
         Profile profile = loadProfile(profileId);
+        List<DanceClass> danceClasses;
 
-        List<DanceClass> danceClasses = danceClassRepository.findByUserAndStateNot(profile.getUser(), State.Delete);
+        if(profile.getUser().getId().equals(user.getId())) {
+            danceClasses = danceClassRepository.findByUserAndStateNot(profile.getUser(), State.Delete);
+            log.info("profile_id : {}, p_user_id : {}, user_id : {}", profile.getId(), profile.getUser().getId(), user.getId());
+        }
+        else {
+            danceClasses = danceClassRepository.findByState(State.Active);
+            log.info("에러");
+        }
 
         return danceClasses.stream().map(
                 danceClass -> GetDanceClassListDto.builder()
@@ -123,7 +133,7 @@ public class ProfileService {
                         ).collect(Collectors.toList()))
                         .location(danceClass.getLocation())
                         .method(danceClass.getMethod().getMethod())
-                        .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                        .videoUrl(danceClass.getClassVideo().getVideoUrl())
                         .mon(danceClass.isMon())
                         .tue(danceClass.isTue())
                         .wed(danceClass.isWed())

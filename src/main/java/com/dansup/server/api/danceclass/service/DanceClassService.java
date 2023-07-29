@@ -43,15 +43,17 @@ public class DanceClassService {
 
     private final GenreService genreService;
 
-    public void createClass(User user, CreateDanceClassDto createDanceClassDto, MultipartFile videofile, MultipartFile thumbnail) throws IOException {
+    public void createClass(User user, CreateDanceClassDto createDanceClassDto, MultipartFile videofile) throws IOException {
 
-        log.info("[createClass 시작]");
         String videoUrl = s3UploaderService.videoUpload(videofile);
-        String thumbnailUrl = s3UploaderService.imageUpload(thumbnail);
-        ClassVideo classVideo = ClassVideo.builder().videoUrl(videoUrl).thumbnailUrl(thumbnailUrl).build();
-        ClassVideo saved = classVideoRepository.save(classVideo);
+//        String thumbnailUrl = s3UploaderService.imageUpload(thumbnail);
 
-        log.info("[classVideo 생성 완료]: exist_ClassVideo_Id = {}, saved_ClassVideo_Id = {}, V_URL = {}, T_URL = {}", classVideo.getId(), saved.getId(), videoUrl, thumbnailUrl);
+        ClassVideo classVideo = ClassVideo.builder()
+                .videoUrl(videoUrl)
+//                .thumbnailUrl(thumbnailUrl)
+                .build();
+
+        classVideoRepository.save(classVideo);
 
         DanceClass danceClass = DanceClass.builder().user(user)
                 .classVideo(classVideo)
@@ -75,7 +77,9 @@ public class DanceClassService {
                 .fri(createDanceClassDto.getDays().isFri())
                 .sat(createDanceClassDto.getDays().isSat())
                 .sun(createDanceClassDto.getDays().isSun())
+                .startHour(createDanceClassDto.getStartHour())
                 .startTime(createDanceClassDto.getStartTime())
+                .endHour(createDanceClassDto.getEndHour())
                 .endTime(createDanceClassDto.getEndTime())
                 .date(createDanceClassDto.getDate())
                 .reserveLink(createDanceClassDto.getReserveLink())
@@ -98,13 +102,9 @@ public class DanceClassService {
 
     public void deleteClass(User user, Long classId) throws BaseException {
 
-        DanceClass danceClass = danceClassRepository.findById(classId).orElseThrow(
-                () -> new BaseException(CLASS_NOT_FOUND)
-        );
+        DanceClass danceClass = loadDanceClass(classId);
 
-        if(!danceClass.getUser().getId().equals(user.getId())){
-            throw new BaseException(FAIL_BAD_REQUEST);
-        }
+        compareUser(danceClass, user);
 
         danceClass.updateState(State.Delete);
         danceClassRepository.save(danceClass);
@@ -112,33 +112,27 @@ public class DanceClassService {
 
     public void closeClass(User user, Long classId) throws BaseException{
 
-        DanceClass danceClass = danceClassRepository.findById(classId).orElseThrow(
-                () -> new BaseException(CLASS_NOT_FOUND)
-        );
+        DanceClass danceClass = loadDanceClass(classId);
 
-        if(!danceClass.getUser().getId().equals(user.getId())){
-            throw new BaseException(FAIL_BAD_REQUEST);
-        }
+        compareUser(danceClass, user);
 
         danceClass.updateState(State.Closed);
         danceClassRepository.save(danceClass);
     }
 
-    public GetDanceClassDto detailClass(Long classId){
+    public GetDanceClassDto detailClass(Long classId) throws BaseException {
 
-        DanceClass danceClass = danceClassRepository.findById(classId).orElseThrow(
-                () -> new BaseException(CLASS_NOT_FOUND)
-        );
-        Profile userprofile = profileRepository.findByUser(danceClass.getUser()).orElseThrow(
-                () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
-        );
+        DanceClass danceClass = loadDanceClass(classId);
+
+        Profile userprofile = loadProfile(danceClass.getUser());
+
 
         GetDanceClassDto getDanceClassDto = GetDanceClassDto.builder()
                 .userId(danceClass.getUser().getId())
                 .userNickname(userprofile.getNickname())
                 .userProfileImage(userprofile.getProfileImage().getUrl())
                 .title(danceClass.getTitle())
-                .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+//                .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
                 .videoUrl(danceClass.getClassVideo().getVideoUrl())
                 .hashtag1(danceClass.getHashtag1())
                 .hashtag2(danceClass.getHashtag2())
@@ -190,15 +184,13 @@ public class DanceClassService {
         return createDanceClassListDtos(danceClasses);
     }
 
-    private List<GetDanceClassListDto> createDanceClassListDtos(List<DanceClass> danceClasses) {
+    private List<GetDanceClassListDto> createDanceClassListDtos(List<DanceClass> danceClasses) throws BaseException {
         List<GetDanceClassListDto> danceClassListDtos = new ArrayList<>();
         Profile profile;
 
         for(DanceClass danceClass : danceClasses) {
 
-            profile = profileRepository.findByUser(danceClass.getUser()).orElseThrow(
-                    () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
-            );
+            profile = loadProfile(danceClass.getUser());
 
             danceClassListDtos.add(GetDanceClassListDto.builder()
                     .userId(danceClass.getUser().getId())
@@ -216,7 +208,7 @@ public class DanceClassService {
                     ).collect(Collectors.toList()))
                     .location(danceClass.getLocation())
                     .method(danceClass.getMethod().getMethod())
-                    .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                    .videoUrl(danceClass.getClassVideo().getVideoUrl())
                     .mon(danceClass.isMon())
                     .tue(danceClass.isTue())
                     .wed(danceClass.isWed())
@@ -233,4 +225,23 @@ public class DanceClassService {
 
     }
 
+    private DanceClass loadDanceClass(Long classId) {
+
+        return danceClassRepository.findById(classId).orElseThrow(
+                () -> new BaseException(CLASS_NOT_FOUND)
+        );
+    }
+
+    private void compareUser(DanceClass danceClass, User user) {
+
+        if(!danceClass.getUser().getId().equals(user.getId())){
+            throw new BaseException(FAIL_BAD_REQUEST);
+        }
+    }
+
+    private Profile loadProfile(User user){
+        return profileRepository.findByUser(user).orElseThrow(
+                () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
+        );
+    }
 }

@@ -82,10 +82,9 @@ public class MyPageController {
     @PostMapping(value = "/class",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response<Void> createDanceClass(@RequestPart(value="createDanceClassDto", required = false) CreateDanceClassDto createDanceClassDto,
                                            @RequestPart(value="videoFile", required = false) MultipartFile videoFile,
-                                           @RequestPart(value="thumbnail", required = false) MultipartFile thumbnail,
                                            @AuthUser User user) throws IOException {
 
-        danceClassService.createClass(user, createDanceClassDto, videoFile, thumbnail);
+        danceClassService.createClass(user, createDanceClassDto, videoFile);
 
         return Response.success(ResponseCode.SUCCESS_CREATED);
     }
