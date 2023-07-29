@@ -43,14 +43,14 @@ public class DanceClassService {
 
     private final GenreService genreService;
 
-    public void createClass(User user, CreateDanceClassDto createDanceClassDto, MultipartFile videofile, MultipartFile thumbnail) throws IOException {
+    public void createClass(User user, CreateDanceClassDto createDanceClassDto, MultipartFile videofile) throws IOException {
 
         String videoUrl = s3UploaderService.videoUpload(videofile);
-        String thumbnailUrl = s3UploaderService.imageUpload(thumbnail);
+//        String thumbnailUrl = s3UploaderService.imageUpload(thumbnail);
 
         ClassVideo classVideo = ClassVideo.builder()
                 .videoUrl(videoUrl)
-                .thumbnailUrl(thumbnailUrl)
+//                .thumbnailUrl(thumbnailUrl)
                 .build();
 
         classVideoRepository.save(classVideo);
@@ -77,7 +77,9 @@ public class DanceClassService {
                 .fri(createDanceClassDto.getDays().isFri())
                 .sat(createDanceClassDto.getDays().isSat())
                 .sun(createDanceClassDto.getDays().isSun())
+                .startHour(createDanceClassDto.getStartHour())
                 .startTime(createDanceClassDto.getStartTime())
+                .endHour(createDanceClassDto.getEndHour())
                 .endTime(createDanceClassDto.getEndTime())
                 .date(createDanceClassDto.getDate())
                 .reserveLink(createDanceClassDto.getReserveLink())
@@ -130,7 +132,7 @@ public class DanceClassService {
                 .userNickname(userprofile.getNickname())
                 .userProfileImage(userprofile.getProfileImage().getUrl())
                 .title(danceClass.getTitle())
-                .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+//                .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
                 .videoUrl(danceClass.getClassVideo().getVideoUrl())
                 .hashtag1(danceClass.getHashtag1())
                 .hashtag2(danceClass.getHashtag2())
@@ -206,7 +208,7 @@ public class DanceClassService {
                     ).collect(Collectors.toList()))
                     .location(danceClass.getLocation())
                     .method(danceClass.getMethod().getMethod())
-                    .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                    .videoUrl(danceClass.getClassVideo().getVideoUrl())
                     .mon(danceClass.isMon())
                     .tue(danceClass.isTue())
                     .wed(danceClass.isWed())

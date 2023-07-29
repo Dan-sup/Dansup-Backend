@@ -109,9 +109,11 @@ public class ProfileService {
 
         if(profile.getUser().getId().equals(user.getId())) {
             danceClasses = danceClassRepository.findByUserAndStateNot(profile.getUser(), State.Delete);
+            log.info("profile_id : {}, p_user_id : {}, user_id : {}", profile.getId(), profile.getUser().getId(), user.getId());
         }
         else {
             danceClasses = danceClassRepository.findByState(State.Active);
+            log.info("에러");
         }
 
         return danceClasses.stream().map(
@@ -131,7 +133,7 @@ public class ProfileService {
                         ).collect(Collectors.toList()))
                         .location(danceClass.getLocation())
                         .method(danceClass.getMethod().getMethod())
-                        .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
+                        .videoUrl(danceClass.getClassVideo().getVideoUrl())
                         .mon(danceClass.isMon())
                         .tue(danceClass.isTue())
                         .wed(danceClass.isWed())

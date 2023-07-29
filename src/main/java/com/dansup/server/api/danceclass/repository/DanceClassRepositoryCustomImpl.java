@@ -38,8 +38,8 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
                         friEq(danceClass, danceClassFilterDto.getDays()),
                         satEq(danceClass, danceClassFilterDto.getDays()),
                         sunEq(danceClass, danceClassFilterDto.getDays()),
-                        startTimeEq(danceClass, danceClassFilterDto.getStartTime(), danceClassFilterDto.getTime()),
-                        endTimeEq(danceClass, danceClassFilterDto.getEndTime(), danceClassFilterDto.getTime()),
+                        startHourEq(danceClass, danceClassFilterDto.getStartHour(), danceClassFilterDto.getTime()),
+                        endHourEq(danceClass, danceClassFilterDto.getEndHour(), danceClassFilterDto.getTime()),
                         methodEq(danceClass, danceClassFilterDto.getMethod()),
                         difficultyEq(danceClass, danceClassFilterDto.getDifficulty()),
                         tuitionBetween(danceClass, danceClassFilterDto.getMinTuition(), danceClassFilterDto.getMaxTuition()),
@@ -67,8 +67,8 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
                         friEq(danceClass, danceClassFilterDto.getDays()),
                         satEq(danceClass, danceClassFilterDto.getDays()),
                         sunEq(danceClass, danceClassFilterDto.getDays()),
-                        startTimeEq(danceClass, danceClassFilterDto.getStartTime(), danceClassFilterDto.getTime()),
-                        endTimeEq(danceClass, danceClassFilterDto.getEndTime(), danceClassFilterDto.getTime()),
+                        startHourEq(danceClass, danceClassFilterDto.getStartHour(), danceClassFilterDto.getTime()),
+                        endHourEq(danceClass, danceClassFilterDto.getEndHour(), danceClassFilterDto.getTime()),
                         methodEq(danceClass, danceClassFilterDto.getMethod()),
                         difficultyEq(danceClass, danceClassFilterDto.getDifficulty()),
                         tuitionBetween(danceClass, danceClassFilterDto.getMinTuition(), danceClassFilterDto.getMaxTuition()),
@@ -111,57 +111,57 @@ public class DanceClassRepositoryCustomImpl extends QuerydslRepositorySupport im
         return (days != null && days.isSun()) ? danceClass.sun.isTrue() : null;
     }
 
-    private BooleanExpression startTimeEq(QDanceClass danceClass, Integer startTime, String time) {
-        if(startTime != null && time == null) {
-            return danceClass.startTime.eq(startTime);
+    private BooleanExpression startHourEq(QDanceClass danceClass, Integer startHour, String time) {
+        if(startHour != null && time == null) {
+            return danceClass.startHour.eq(startHour);
         }
 
-        if (startTime == null && time != null) {
+        if (startHour == null && time != null) {
             switch (time) {
                 case "새벽":
-                    return danceClass.startTime.between(0, 5);
+                    return danceClass.startHour.between(0, 5);
                 case "오전":
-                    return danceClass.startTime.between(6, 11);
+                    return danceClass.startHour.between(6, 11);
                 case "오후":
-                    return danceClass.startTime.between(12, 17);
+                    return danceClass.startHour.between(12, 17);
                 case "저녁":
-                    return danceClass.startTime.between(18, 23);
+                    return danceClass.startHour.between(18, 23);
                 case "새벽-오전":
-                    return danceClass.startTime.between(0, 11);
+                    return danceClass.startHour.between(0, 11);
                 case "오전-오후":
-                    return danceClass.startTime.between(6, 17);
+                    return danceClass.startHour.between(6, 17);
                 case "오후-저녁":
-                    return danceClass.startTime.between(12, 23);
+                    return danceClass.startHour.between(12, 23);
                 default:
-                    return danceClass.startTime.between(18, 29);
+                    return danceClass.startHour.between(18, 29);
             }
         }
         return null;
     }
 
-    private BooleanExpression endTimeEq(QDanceClass danceClass, Integer endTime, String time) {
-        if(endTime != null && time == null) {
-            return danceClass.endTime.eq(endTime);
+    private BooleanExpression endHourEq(QDanceClass danceClass, Integer endHour, String time) {
+        if(endHour != null && time == null) {
+            return danceClass.endHour.eq(endHour);
         }
 
-        if (endTime == null && time != null) {
+        if (endHour == null && time != null) {
             switch (time) {
                 case "새벽":
-                    return danceClass.endTime.between(1, 6);
+                    return danceClass.endHour.between(1, 6);
                 case "오전":
-                    return danceClass.endTime.between(7, 12);
+                    return danceClass.endHour.between(7, 12);
                 case "오후":
-                    return danceClass.endTime.between(13, 18);
+                    return danceClass.endHour.between(13, 18);
                 case "저녁":
-                    return danceClass.endTime.between(19, 24);
+                    return danceClass.endHour.between(19, 24);
                 case "새벽-오전":
-                    return danceClass.endTime.between(1, 12);
+                    return danceClass.endHour.between(1, 12);
                 case "오전-오후":
-                    return danceClass.endTime.between(7, 18);
+                    return danceClass.endHour.between(7, 18);
                 case "오후-저녁":
-                    return danceClass.endTime.between(13, 24);
+                    return danceClass.endHour.between(13, 24);
                 default:
-                    return danceClass.endTime.between(19, 30);
+                    return danceClass.endHour.between(19, 30);
             }
         }
         return null;

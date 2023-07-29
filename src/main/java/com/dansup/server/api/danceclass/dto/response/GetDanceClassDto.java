@@ -28,8 +28,8 @@ public class GetDanceClassDto {
     //수업 정보
     @ApiModelProperty(value = "수업 제목" , example = "임선생의 몸치 탈출 프로젝트")
     private String title;
-    @ApiModelProperty(value = "수업 영상 thumbnail" , example = "thumbnailUrl")
-    private String thumbnailUrl;
+//    @ApiModelProperty(value = "수업 영상 thumbnail" , example = "thumbnailUrl")
+//    private String thumbnailUrl;
     @ApiModelProperty(value = "수업 영상" , example = "videoUrl")
     private String videoUrl;
     @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")
@@ -83,10 +83,10 @@ public class GetDanceClassDto {
     @ApiModelProperty(value = "일요일" , example = "true")
     private boolean sun;
 
-    @ApiModelProperty(value = "수업 시작 시간" , example = "20")
-    private int startTime;
-    @ApiModelProperty(value = "수업 종료 시간" , example = "22")
-    private int endTime;
+    @ApiModelProperty(value = "수업 시작 시간" , example = "20:00")
+    private String startTime;
+    @ApiModelProperty(value = "수업 종료 시간" , example = "22:00")
+    private String endTime;
     @ApiModelProperty(value = "원데이 클래스에서의 날짜" , example = "2023/5/29")
     private String date;
     @ApiModelProperty(value = "수업 예약 링크" , example = "com.googleform.")
