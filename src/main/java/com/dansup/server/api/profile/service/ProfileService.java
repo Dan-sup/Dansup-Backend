@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.dansup.server.common.response.ResponseCode.FAIL_BAD_REQUEST;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -107,14 +109,17 @@ public class ProfileService {
         Profile profile = loadProfile(profileId);
         List<DanceClass> danceClasses;
 
-        if(profile.getUser().getId().equals(user.getId())) {
-            danceClasses = danceClassRepository.findByUserAndStateNot(profile.getUser(), State.Delete);
-            log.info("profile_id : {}, p_user_id : {}, user_id : {}", profile.getId(), profile.getUser().getId(), user.getId());
-        }
-        else {
-            danceClasses = danceClassRepository.findByState(State.Active);
-            log.info("에러");
-        }
+        danceClasses = danceClassRepository.findByState(State.Active);
+
+//        if(user == null) {
+//            danceClasses = danceClassRepository.findByState(State.Active);
+//            log.info("에러");
+//        } else if(profile.getUser().getId().equals(user.getId())) {
+//            danceClasses = danceClassRepository.findByUserAndStateNot(profile.getUser(), State.Delete);
+//            log.info("profile_id : {}, p_user_id : {}, user_id : {}", profile.getId(), profile.getUser().getId(), user.getId());
+//        } else {
+//            throw new BaseException(FAIL_BAD_REQUEST);
+//        }
 
         return danceClasses.stream().map(
                 danceClass -> GetDanceClassListDto.builder()
