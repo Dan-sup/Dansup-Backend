@@ -20,7 +20,7 @@ public class GetDanceClassListDto {
 
     //수업에서 표출되는 댄서 정보
     @ApiModelProperty(value = "강사(댄서) ID" , example = "4")
-    private Long userId;
+    private Long profileId;
 
     @ApiModelProperty(value = "강사(댄서) 닉네임" , example = "아이키")
     private String userNickname;
@@ -42,9 +42,6 @@ public class GetDanceClassListDto {
 
     @ApiModelProperty(value = "수업 방식" , example = "OD")
     private String method;
-
-//    @ApiModelProperty(value = "수업 영상 thumbnail" , example = "Url")
-//    private String thumbnailUrl;
 
     @ApiModelProperty(value = "수업 영상 Url" , example = "Url")
     private String videoUrl;

@@ -55,8 +55,8 @@ public class ProfileController {
 
     @ApiOperation(value = "Get Dancer Classes", notes = "댄서 프로필에서 운영 중인 수업 조회")
     @GetMapping(value = "/{profileId}/class")
-    public Response<List<GetDanceClassListDto>> getProfileClassList(@AuthenticationPrincipal User user, @PathVariable("profileId") Long profileId) {
-        List<GetDanceClassListDto> getDanceClassListDtos = profileService.getDanceClassList(user, profileId);
+    public Response<List<GetDanceClassListDto>> getProfileClassList(@PathVariable("profileId") Long profileId) {
+        List<GetDanceClassListDto> getDanceClassListDtos = profileService.getProfileClassList(profileId);
         return Response.success(ResponseCode.SUCCESS_OK, getDanceClassListDtos);
     }
 

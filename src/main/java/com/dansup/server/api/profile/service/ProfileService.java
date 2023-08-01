@@ -12,6 +12,7 @@ import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
 import com.dansup.server.api.profile.dto.response.GetProfileListDto;
 import com.dansup.server.api.profile.repository.ProfileRepository;
 import com.dansup.server.api.user.domain.User;
+import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -104,26 +105,15 @@ public class ProfileService {
         ).collect(Collectors.toList());
     }
 
-    public List<GetDanceClassListDto> getDanceClassList(User user, Long profileId) {
+    public List<GetDanceClassListDto> getProfileClassList(Long profileId) {
 
         Profile profile = loadProfile(profileId);
-        List<DanceClass> danceClasses;
-
-        danceClasses = danceClassRepository.findByState(State.Active);
-
-//        if(user == null) {
-//            danceClasses = danceClassRepository.findByState(State.Active);
-//            log.info("에러");
-//        } else if(profile.getUser().getId().equals(user.getId())) {
-//            danceClasses = danceClassRepository.findByUserAndStateNot(profile.getUser(), State.Delete);
-//            log.info("profile_id : {}, p_user_id : {}, user_id : {}", profile.getId(), profile.getUser().getId(), user.getId());
-//        } else {
-//            throw new BaseException(FAIL_BAD_REQUEST);
-//        }
+        User user = profile.getUser();
+        List<DanceClass> danceClasses = danceClassRepository.findByUserAndState(user, State.Active);
 
         return danceClasses.stream().map(
                 danceClass -> GetDanceClassListDto.builder()
-                        .userId(profile.getUser().getId())
+                        .profileId(profileId)
                         .userNickname(profile.getNickname())
                         .userProfileImage(profile.getProfileImage().getUrl())
                         .danceClassId(danceClass.getId())

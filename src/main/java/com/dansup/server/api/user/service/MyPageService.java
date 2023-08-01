@@ -97,7 +97,7 @@ public class MyPageService {
 
         return danceClasses.stream().map(
                 danceClass -> GetDanceClassListDto.builder()
-                        .userId(user.getId())
+                        .profileId(myPage.getId())
                         .userNickname(myPage.getNickname())
                         .userProfileImage(myPage.getProfileImage().getUrl())
                         .danceClassId(danceClass.getId())

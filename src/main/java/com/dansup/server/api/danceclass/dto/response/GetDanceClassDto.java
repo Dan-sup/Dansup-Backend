@@ -18,8 +18,8 @@ import java.util.List;
 public class GetDanceClassDto {
 
     //수업에서 표출되는 댄서 정보
-    @ApiModelProperty(value = "강사(댄서) ID" , example = "4")
-    private Long userId;
+    @ApiModelProperty(value = "강사(댄서) 프로필 ID" , example = "4")
+    private Long profileId;
     @ApiModelProperty(value = "강사(댄서) 닉네임" , example = "아이키")
     private String userNickname;
     @ApiModelProperty(value = "강사(댄서) 프로필 이미지" , example = "image")
@@ -28,8 +28,6 @@ public class GetDanceClassDto {
     //수업 정보
     @ApiModelProperty(value = "수업 제목" , example = "임선생의 몸치 탈출 프로젝트")
     private String title;
-//    @ApiModelProperty(value = "수업 영상 thumbnail" , example = "thumbnailUrl")
-//    private String thumbnailUrl;
     @ApiModelProperty(value = "수업 영상" , example = "videoUrl")
     private String videoUrl;
     @ApiModelProperty(value = "수업 해시태그" , example = "빠른템포의")

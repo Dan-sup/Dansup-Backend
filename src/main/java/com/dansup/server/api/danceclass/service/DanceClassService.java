@@ -124,15 +124,14 @@ public class DanceClassService {
 
         DanceClass danceClass = loadDanceClass(classId);
 
-        Profile userprofile = loadProfile(danceClass.getUser());
+        Profile profile = loadProfile(danceClass.getUser());
 
 
-        GetDanceClassDto getDanceClassDto = GetDanceClassDto.builder()
-                .userId(danceClass.getUser().getId())
-                .userNickname(userprofile.getNickname())
-                .userProfileImage(userprofile.getProfileImage().getUrl())
+        return GetDanceClassDto.builder()
+                .profileId(profile.getId())
+                .userNickname(profile.getNickname())
+                .userProfileImage(profile.getProfileImage().getUrl())
                 .title(danceClass.getTitle())
-//                .thumbnailUrl(danceClass.getClassVideo().getThumbnailUrl())
                 .videoUrl(danceClass.getClassVideo().getVideoUrl())
                 .hashtag1(danceClass.getHashtag1())
                 .hashtag2(danceClass.getHashtag2())
@@ -167,8 +166,6 @@ public class DanceClassService {
                 .reserveLink(danceClass.getReserveLink())
                 .state(danceClass.getState().toString())
                 .build();
-
-        return getDanceClassDto;
     }
 
 
@@ -193,7 +190,7 @@ public class DanceClassService {
             profile = loadProfile(danceClass.getUser());
 
             danceClassListDtos.add(GetDanceClassListDto.builder()
-                    .userId(danceClass.getUser().getId())
+                    .profileId(profile.getId())
                     .userNickname(profile.getNickname())
                     .userProfileImage(profile.getProfileImage().getUrl())
                     .danceClassId(danceClass.getId())
