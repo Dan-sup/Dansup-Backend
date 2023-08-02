@@ -88,20 +88,12 @@ public class DanceClass extends BaseEntity {
     private boolean sat;
     private boolean sun;
 
-    @Column(nullable = false)
-    @NotNull(message = "수업 시작 Hour 는 필수 값입니다..")
     private int startHour;
 
-    @Column(nullable = false)
-    @NotBlank(message = "수업 시작시간은 필수 값입니다.")
     private String startTime;
 
-    @Column(nullable = false)
-    @NotNull(message = "수업 종료 Hour 는 필수 값입니다.")
     private int endHour;
 
-    @Column(nullable = false)
-    @NotBlank(message = "수업 종료시간은 필수 값입니다.")
     private String endTime;
 
     private String date;

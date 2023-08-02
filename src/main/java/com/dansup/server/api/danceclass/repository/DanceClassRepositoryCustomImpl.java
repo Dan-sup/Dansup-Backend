@@ -5,7 +5,6 @@ import com.dansup.server.api.danceclass.domain.*;
 import com.dansup.server.api.danceclass.dto.request.DanceClassFilterDto;
 import com.dansup.server.api.danceclass.dto.request.DayRequestDto;
 import com.dansup.server.api.genre.domain.QClassGenre;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;

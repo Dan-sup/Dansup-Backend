@@ -76,19 +76,15 @@ public class CreateDanceClassDto {
     private DayRequestDto days;
 
     @ApiModelProperty(value = "수업 시작 Hour(int)" , example = "20")
-    @NotBlank
     private int startHour;
 
     @ApiModelProperty(value = "수업 시작 Time(string)" , example = "20:00")
-    @NotBlank
     private String startTime;
 
     @ApiModelProperty(value = "수업 종료 Hour(int)" , example = "22")
-    @NotBlank
     private int endHour;
 
     @ApiModelProperty(value = "수업 종료 Time(string)" , example = "22:00")
-    @NotBlank
     private String endTime;
 
     @ApiModelProperty(value = "원데이 클래스에서의 날짜" , example = "2023/5/29")
