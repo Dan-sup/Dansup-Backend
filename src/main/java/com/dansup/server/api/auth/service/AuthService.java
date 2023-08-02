@@ -124,7 +124,6 @@ public class AuthService {
     }
 
     private boolean validFile(MultipartFile multipartFile) {
-        log.info("[multipartfile]: {}", multipartFile);
         log.info("[multipartfile]: {}", !multipartFile.isEmpty());
         return !multipartFile.isEmpty();
     }
