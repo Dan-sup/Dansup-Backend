@@ -68,6 +68,9 @@ public class AuthService {
             throw new BaseException(ResponseCode.DUPLICATE_NICKNAME);
         }
 
+        log.info("[profileImage]: {}", profileImage);
+        log.info("[profileVideo]: {}", profileVideo);
+
         Profile profile = Profile.builder()
                 .user(findUser)
                 .profileImage(createProfileImage(profileImage))
@@ -124,7 +127,7 @@ public class AuthService {
     }
 
     private boolean validFile(MultipartFile multipartFile) {
-        log.info("[multipartfile]: {}", !multipartFile.isEmpty());
+        log.info("[valid multipartfile]: {}",!multipartFile.isEmpty());
         return !multipartFile.isEmpty();
     }
 
@@ -132,7 +135,7 @@ public class AuthService {
         String profileImageUrl = null;
         ProfileImage uploadedProfileImage;
 
-        if(validFile(profileImage)) {
+        if(profileImage != null && validFile(profileImage)) {
             log.info("[image url not null]");
             profileImageUrl = s3UploaderService.imageUpload(profileImage);
         }
@@ -149,7 +152,7 @@ public class AuthService {
         String profileVideoUrl = null;
         ProfileVideo uploadedProfileVideo;
 
-        if(validFile(profileVideo)) {
+        if(profileVideo != null && validFile(profileVideo)) {
             log.info("[video url not null]");
             profileVideoUrl = s3UploaderService.videoUpload(profileVideo);
         }

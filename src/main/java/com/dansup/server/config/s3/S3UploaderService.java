@@ -43,7 +43,7 @@ public class S3UploaderService {
     }
 
     public String upload(MultipartFile multipartFile, String bucket, String dirName) throws IOException {
-        if(multipartFile.isEmpty()) {
+        if(multipartFile == null) {
             return null;
         }
 
