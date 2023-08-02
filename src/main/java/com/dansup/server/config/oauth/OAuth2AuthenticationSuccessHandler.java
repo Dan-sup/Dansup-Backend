@@ -68,7 +68,7 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
             redirectUrl = "http://localhost:3000/login/oauth2/success";
         }
         if (requestUrl.equals("dan-sup.com")) {
-            redirectUrl = "https://dan-sup.com/login/oauth2/success";
+            redirectUrl = "https://www.dan-sup.com/login/oauth2/success";
         }
 
         return redirectUrl;
