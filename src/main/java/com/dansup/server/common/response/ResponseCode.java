@@ -18,6 +18,7 @@ public enum ResponseCode {
 
     //fail
     FAIL_BAD_REQUEST(BAD_REQUEST, "잘못된 요청입니다."),
+    FAIL_NOT_POSTER(BAD_REQUEST, "작성자가 아닙니다."),
     FAIL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다."),
 
     // Auth

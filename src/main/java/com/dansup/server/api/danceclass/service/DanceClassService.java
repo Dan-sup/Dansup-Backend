@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.dansup.server.common.response.ResponseCode.CLASS_NOT_FOUND;
-import static com.dansup.server.common.response.ResponseCode.FAIL_BAD_REQUEST;
+import static com.dansup.server.common.response.ResponseCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -106,8 +105,8 @@ public class DanceClassService {
 
         compareUser(danceClass, user);
 
-        danceClass.updateState(State.Delete);
-        danceClassRepository.save(danceClass);
+        deleteFile(danceClass.getClassVideo().getVideoUrl());
+        danceClassRepository.deleteById(danceClass.getId());
     }
 
     public void closeClass(User user, Long classId) throws BaseException{
@@ -232,7 +231,7 @@ public class DanceClassService {
     private void compareUser(DanceClass danceClass, User user) {
 
         if(!danceClass.getUser().getId().equals(user.getId())){
-            throw new BaseException(FAIL_BAD_REQUEST);
+            throw new BaseException(FAIL_NOT_POSTER);
         }
     }
 
@@ -240,5 +239,13 @@ public class DanceClassService {
         return profileRepository.findByUser(user).orElseThrow(
                 () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
         );
+    }
+
+    private void deleteFile(String ImageURL) {
+        if(ImageURL == null){
+            return;
+        }
+        String ImageName = ImageURL.split("com/")[1].trim();
+        s3UploaderService.deleteFile(ImageName);
     }
 }
