@@ -180,14 +180,6 @@ public class ProfileService {
             danceClassService.deleteFile(portfolioVideo.getUrl());
         }
 
-        //문제!!!!!!!!!!!!!!!!
-//        profile.getPortfolioVideos().stream().map(
-//                portfolioVideo -> {
-//                    danceClassService.deleteFile(portfolioVideo.getUrl());
-//                    return null;
-//                }
-//        );
-
         profileRepository.delete(profile);
     }
 }

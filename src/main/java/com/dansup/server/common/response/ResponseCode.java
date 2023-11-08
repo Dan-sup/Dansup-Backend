@@ -37,7 +37,10 @@ public enum ResponseCode {
     PROFILE_NOT_FOUND(NOT_FOUND, "존재하지 않는 프로필입니다."),
 
     //class
-    CLASS_NOT_FOUND(NOT_FOUND, "존재하지 않는 클래스입니다.");
+    CLASS_NOT_FOUND(NOT_FOUND, "존재하지 않는 클래스입니다."),
+
+    //video
+    VIDEO_NOT_FOUND(NOT_FOUND, "존재하지 않는 영상입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
