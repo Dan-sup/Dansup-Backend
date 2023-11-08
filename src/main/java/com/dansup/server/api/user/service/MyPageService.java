@@ -86,6 +86,7 @@ public class MyPageService {
 
         return myPage.getPortfolioVideos().stream().map(
                 portfolioVideo -> GetFileUrlDto.builder()
+                        .pvId(portfolioVideo.getId())
                         .url(portfolioVideo.getUrl())
                         .build()
         ).collect(Collectors.toList());

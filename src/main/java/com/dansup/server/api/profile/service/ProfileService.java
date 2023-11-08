@@ -104,6 +104,7 @@ public class ProfileService {
 
         return profile.getPortfolioVideos().stream().map(
                 portfolioVideo -> GetFileUrlDto.builder()
+                        .pvId(portfolioVideo.getId())
                         .url(portfolioVideo.getUrl())
                         .build()
         ).collect(Collectors.toList());

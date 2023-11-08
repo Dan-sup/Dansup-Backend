@@ -6,7 +6,6 @@ import com.dansup.server.api.danceclass.dto.request.DanceClassFilterDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassDto;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.service.DanceClassService;
-import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.common.AuthUser;
 import com.dansup.server.common.response.Response;

@@ -8,7 +8,6 @@ import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.repository.DanceClassRepository;
 import com.dansup.server.api.profile.domain.Portfolio;
 import com.dansup.server.api.profile.domain.Profile;
-import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
 import com.dansup.server.api.profile.repository.PortfolioRepository;

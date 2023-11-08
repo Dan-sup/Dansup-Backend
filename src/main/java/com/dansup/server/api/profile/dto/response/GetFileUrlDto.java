@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetFileUrlDto {
 
+    @ApiModelProperty(value = "portfolio ID", example = "23")
+    private Long pvId;
+
     @ApiModelProperty(value = "file url", example = "url")
     private String url;
 
