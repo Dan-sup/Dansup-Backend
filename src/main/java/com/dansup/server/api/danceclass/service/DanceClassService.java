@@ -99,6 +99,18 @@ public class DanceClassService {
         return createDanceClassListDtos(danceClasses);
     }
 
+    public void deleteAllClass(User user) throws BaseException {
+        List<DanceClass> danceClasses = danceClassRepository.findByUser(user);
+
+        for (DanceClass danceClass: danceClasses) {
+            deleteClass(user, danceClass.getId());
+        }
+//        danceClasses.stream().map(danceClass -> {
+//            deleteClass(user, danceClass.getId());
+//            return null;
+//        });
+    }
+
     public void deleteClass(User user, Long classId) throws BaseException {
 
         DanceClass danceClass = loadDanceClass(classId);
@@ -106,7 +118,7 @@ public class DanceClassService {
         compareUser(danceClass, user);
 
         deleteFile(danceClass.getClassVideo().getVideoUrl());
-        danceClassRepository.deleteById(danceClass.getId());
+        danceClassRepository.delete(danceClass);
     }
 
     public void closeClass(User user, Long classId) throws BaseException{
@@ -235,13 +247,13 @@ public class DanceClassService {
         }
     }
 
-    private Profile loadProfile(User user){
+    public Profile loadProfile(User user){
         return profileRepository.findByUser(user).orElseThrow(
                 () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
         );
     }
 
-    private void deleteFile(String ImageURL) {
+    public void deleteFile(String ImageURL) {
         if(ImageURL == null){
             return;
         }

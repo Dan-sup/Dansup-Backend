@@ -5,6 +5,8 @@ import com.dansup.server.api.danceclass.domain.DanceClass;
 import com.dansup.server.api.danceclass.domain.State;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.repository.DanceClassRepository;
+import com.dansup.server.api.danceclass.service.DanceClassService;
+import com.dansup.server.api.profile.domain.PortfolioVideo;
 import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
@@ -15,6 +17,7 @@ import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.common.exception.BaseException;
 import com.dansup.server.common.response.ResponseCode;
+import com.dansup.server.config.s3.S3UploaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.dansup.server.common.response.ResponseCode.FAIL_BAD_REQUEST;
+import static com.dansup.server.common.response.ResponseCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
     private final DanceClassRepository danceClassRepository;
+    private final DanceClassService danceClassService;
 
 
     public GetProfileDetailDto getProfileDetail(Long profileId) {
@@ -143,9 +147,47 @@ public class ProfileService {
     }
 
     private Profile loadProfile(Long profileId) {
-
         return profileRepository.findById(profileId).orElseThrow(
                 () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
         );
+    }
+
+    private Profile loadProfile(User user) {
+        return profileRepository.findByUser(user).orElseThrow(
+                () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
+        );
+    }
+
+    public void compareUser(Profile profile, User user) {
+
+        if(!profile.getUser().getId().equals(user.getId())){
+            throw new BaseException(FAIL_NOT_POSTER);
+        }
+    }
+
+    public void deleteProfile(User user) throws BaseException {
+
+        Profile profile = loadProfile(user);
+
+        compareUser(profile, user);
+
+        danceClassService.deleteFile(profile.getProfileImage().getUrl());
+        danceClassService.deleteFile(profile.getProfileVideo().getUrl());
+
+        List<PortfolioVideo> portfolioVideos= profile.getPortfolioVideos();
+
+        for(PortfolioVideo portfolioVideo: portfolioVideos){
+            danceClassService.deleteFile(portfolioVideo.getUrl());
+        }
+
+        //문제!!!!!!!!!!!!!!!!
+//        profile.getPortfolioVideos().stream().map(
+//                portfolioVideo -> {
+//                    danceClassService.deleteFile(portfolioVideo.getUrl());
+//                    return null;
+//                }
+//        );
+
+        profileRepository.delete(profile);
     }
 }

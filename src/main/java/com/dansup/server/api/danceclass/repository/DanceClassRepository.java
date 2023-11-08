@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface DanceClassRepository extends JpaRepository<DanceClass, Long>, DanceClassRepositoryCustom {
     Optional<DanceClass> findById(Long dance_class_id);
     List<DanceClass> findByState(State state);
+    List<DanceClass> findByUser(User user);
 
     List<DanceClass> findByUserAndStateNot(User user, State state);
 
