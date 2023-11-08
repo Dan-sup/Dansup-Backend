@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.dansup.server.common.response.ResponseCode.CLASS_NOT_FOUND;
-import static com.dansup.server.common.response.ResponseCode.FAIL_BAD_REQUEST;
+import static com.dansup.server.common.response.ResponseCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -100,14 +99,26 @@ public class DanceClassService {
         return createDanceClassListDtos(danceClasses);
     }
 
+    public void deleteAllClass(User user) throws BaseException {
+        List<DanceClass> danceClasses = danceClassRepository.findByUser(user);
+
+        for (DanceClass danceClass: danceClasses) {
+            deleteClass(user, danceClass.getId());
+        }
+//        danceClasses.stream().map(danceClass -> {
+//            deleteClass(user, danceClass.getId());
+//            return null;
+//        });
+    }
+
     public void deleteClass(User user, Long classId) throws BaseException {
 
         DanceClass danceClass = loadDanceClass(classId);
 
         compareUser(danceClass, user);
 
-        danceClass.updateState(State.Delete);
-        danceClassRepository.save(danceClass);
+        deleteFile(danceClass.getClassVideo().getVideoUrl());
+        danceClassRepository.delete(danceClass);
     }
 
     public void closeClass(User user, Long classId) throws BaseException{
@@ -232,13 +243,21 @@ public class DanceClassService {
     private void compareUser(DanceClass danceClass, User user) {
 
         if(!danceClass.getUser().getId().equals(user.getId())){
-            throw new BaseException(FAIL_BAD_REQUEST);
+            throw new BaseException(FAIL_NOT_POSTER);
         }
     }
 
-    private Profile loadProfile(User user){
+    public Profile loadProfile(User user){
         return profileRepository.findByUser(user).orElseThrow(
                 () -> new BaseException(ResponseCode.PROFILE_NOT_FOUND)
         );
+    }
+
+    public void deleteFile(String ImageURL) {
+        if(ImageURL == null){
+            return;
+        }
+        String ImageName = ImageURL.split("com/")[1].trim();
+        s3UploaderService.deleteFile(ImageName);
     }
 }

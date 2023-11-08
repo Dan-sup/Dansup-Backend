@@ -18,6 +18,7 @@ public enum ResponseCode {
 
     //fail
     FAIL_BAD_REQUEST(BAD_REQUEST, "잘못된 요청입니다."),
+    FAIL_NOT_POSTER(BAD_REQUEST, "작성자가 아닙니다."),
     FAIL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다."),
 
     // Auth
@@ -36,7 +37,10 @@ public enum ResponseCode {
     PROFILE_NOT_FOUND(NOT_FOUND, "존재하지 않는 프로필입니다."),
 
     //class
-    CLASS_NOT_FOUND(NOT_FOUND, "존재하지 않는 클래스입니다.");
+    CLASS_NOT_FOUND(NOT_FOUND, "존재하지 않는 클래스입니다."),
+
+    //video
+    VIDEO_NOT_FOUND(NOT_FOUND, "존재하지 않는 영상입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

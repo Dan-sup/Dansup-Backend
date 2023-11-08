@@ -4,6 +4,8 @@ import com.dansup.server.api.auth.dto.request.RefreshTokenDto;
 import com.dansup.server.api.auth.dto.request.SignUpDto;
 import com.dansup.server.api.auth.dto.response.AccessTokenDto;
 import com.dansup.server.api.auth.service.AuthService;
+import com.dansup.server.api.danceclass.service.DanceClassService;
+import com.dansup.server.api.profile.service.ProfileService;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.common.AuthUser;
 import com.dansup.server.common.response.Response;
@@ -26,6 +28,8 @@ import java.io.IOException;
 public class AuthController {
 
     private final AuthService authService;
+    private final ProfileService profileService;
+    private final DanceClassService danceClassService;
 
     @ApiOperation(value = "Sign Up", notes = "회원 가입")
     @PostMapping(value = "/sign-up", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -45,6 +49,18 @@ public class AuthController {
     public Response<Void> signOut(@AuthUser User user, @RequestBody RefreshTokenDto refreshTokenDto) {
         authService.signOut(user, refreshTokenDto);
 
+        return Response.success(ResponseCode.SUCCESS_OK);
+    }
+
+    @ApiOperation(value = "Delete User", notes = "탈퇴하기")
+    @PostMapping(value = "/delete")
+    public Response<Void> deleteUser(@AuthUser User user, @RequestBody RefreshTokenDto refreshTokenDto) {
+        authService.signOut(user, refreshTokenDto);
+
+        danceClassService.deleteAllClass(user);
+        profileService.deleteProfile(user);
+
+        authService.deleteUser(user);
         return Response.success(ResponseCode.SUCCESS_OK);
     }
 

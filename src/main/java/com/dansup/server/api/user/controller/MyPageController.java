@@ -56,6 +56,16 @@ public class MyPageController {
         return Response.success(ResponseCode.SUCCESS_CREATED);
     }
 
+    @ApiOperation(value = "Delete PortfolioVideo", notes = "마이페이지에서 포트폴리오 영상 삭제")
+    @DeleteMapping("/portfolio/video/{pvId}")
+    public Response<Void> deletePostPortfolioVideo(@AuthUser User user,
+                                                   @PathVariable("pvId") Long pvId) {
+
+        myPageService.deletePortfolioVideo(user, pvId);
+
+        return Response.success(ResponseCode.SUCCESS_OK);
+    }
+
     @ApiOperation(value = "Get Mypage Portfolio", notes = "마이페이지에서 포트폴리오(공연 및 활동 경력) 조회")
     @GetMapping(value = "/portfolio")
     public Response<List<GetPortfolioDto>> getPortfolioList(@AuthUser User user) {
@@ -101,10 +111,9 @@ public class MyPageController {
 
     @ApiOperation(value = "Delete DanceClass", notes = "댄스 수업 삭제")
     @DeleteMapping("/class/{danceclassId}")
-    public Response<Void> deletePost(@AuthUser User user,
-                                     @PathVariable("danceclassId") Long danceclassId) {
+    public Response<Void> deleteDanceClass(@AuthUser User user,
+                                           @PathVariable("danceclassId") Long danceclassId) {
 
-        // DanceClass 의 State 를 Deleted 로 변경
         danceClassService.deleteClass(user, danceclassId);
 
         return Response.success(ResponseCode.SUCCESS_OK);
