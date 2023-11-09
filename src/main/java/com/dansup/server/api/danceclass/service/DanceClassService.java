@@ -81,6 +81,7 @@ public class DanceClassService {
                 .endHour(createDanceClassDto.getEndHour())
                 .endTime(createDanceClassDto.getEndTime())
                 .date(createDanceClassDto.getDate())
+                .onSite(createDanceClassDto.isOnSite())
                 .reserveLink(createDanceClassDto.getReserveLink())
                 .state(State.Active)
                 .build();
@@ -174,6 +175,7 @@ public class DanceClassService {
                 .startTime(danceClass.getStartTime())
                 .endTime(danceClass.getEndTime())
                 .date(danceClass.getDate())
+                .onSite(danceClass.isOnSite())
                 .reserveLink(danceClass.getReserveLink())
                 .state(danceClass.getState().toString())
                 .build();

@@ -90,6 +90,9 @@ public class CreateDanceClassDto {
     @ApiModelProperty(value = "원데이 클래스에서의 날짜" , example = "2023/5/29")
     private String date;
 
+    @ApiModelProperty(value = "현장 결제 등록" , example = "1")
+    private boolean onSite;
+
     @ApiModelProperty(value = "수업 예약 링크" , example = "com.googleform.")
     private String reserveLink;
 
