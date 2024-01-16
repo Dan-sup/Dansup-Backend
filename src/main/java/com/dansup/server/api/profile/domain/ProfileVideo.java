@@ -1,5 +1,6 @@
 package com.dansup.server.api.profile.domain;
 
+import com.dansup.server.api.danceclass.domain.State;
 import com.dansup.server.common.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,4 +23,7 @@ public class ProfileVideo extends BaseEntity {
 
     private String url;
 
+    public void updateUrl(String videoUrl) {
+        this.url = videoUrl;
+    }
 }

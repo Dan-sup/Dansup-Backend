@@ -8,13 +8,12 @@ import com.dansup.server.api.danceclass.repository.DanceClassRepository;
 import com.dansup.server.api.danceclass.service.DanceClassService;
 import com.dansup.server.api.profile.domain.PortfolioVideo;
 import com.dansup.server.api.profile.domain.Profile;
+import com.dansup.server.api.profile.domain.ProfileImage;
 import com.dansup.server.api.profile.domain.ProfileVideo;
 import com.dansup.server.api.profile.dto.response.GetFileUrlDto;
 import com.dansup.server.api.profile.dto.response.GetPortfolioDto;
 import com.dansup.server.api.profile.dto.response.GetProfileDetailDto;
-import com.dansup.server.api.profile.repository.PortfolioRepository;
-import com.dansup.server.api.profile.repository.PortfolioVideoRepository;
-import com.dansup.server.api.profile.repository.ProfileRepository;
+import com.dansup.server.api.profile.repository.*;
 import com.dansup.server.api.user.domain.User;
 import com.dansup.server.api.user.repository.UserRepository;
 import com.dansup.server.common.exception.BaseException;
@@ -42,6 +41,8 @@ public class MyPageService {
     private final S3UploaderService s3UploaderService;
     private final DanceClassService danceClassService;
     private final ProfileRepository profileRepository;
+    private final ProfileImageRepository profileImageRepository;
+    private final ProfileVideoRepository profileVideoRepository;
     private final DanceClassRepository danceClassRepository;
     private final PortfolioVideoRepository portfolioVideoRepository;
 
@@ -139,6 +140,28 @@ public class MyPageService {
                                                 .build();
 
         portfolioVideoRepository.save(portfolioVideo);
+    }
+
+    public void changeProfileVideo(User user, MultipartFile multipartFile) throws IOException {
+
+        Profile myPage = loadMyPage(user);
+        ProfileVideo profileVideo = myPage.getProfileVideo();
+        danceClassService.deleteFile(profileVideo.getUrl());
+
+        String videoUrl = s3UploaderService.videoUpload(multipartFile);
+        profileVideo.updateUrl(videoUrl);
+        profileVideoRepository.save(profileVideo);
+    }
+
+    public void changeProfileImage(User user, MultipartFile multipartFile) throws IOException {
+
+        Profile myPage = loadMyPage(user);
+        ProfileImage profileImage = myPage.getProfileImage();
+        danceClassService.deleteFile(profileImage.getUrl());
+
+        String imageUrl = s3UploaderService.videoUpload(multipartFile);
+        profileImage.updateUrl(imageUrl);
+        profileImageRepository.save(profileImage);
     }
 
     public void deletePortfolioVideo(User user, Long pvId) throws BaseException {

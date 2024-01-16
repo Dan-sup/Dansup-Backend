@@ -28,4 +28,7 @@ public class ProfileImage extends BaseEntity {
         this.url = url;
     }
 
+    public void updateUrl(String imageUrl) {
+        this.url = imageUrl;
+    }
 }

@@ -14,7 +14,8 @@ public enum ResponseCode {
 
     // success
     SUCCESS_OK(OK, "요청에 성공하였습니다."),
-    SUCCESS_CREATED(CREATED, "요청에 성공하였습니다."),
+    SUCCESS_CHANGE(OK, "수정에 성공하였습니다."),
+    SUCCESS_CREATED(CREATED, "생성에 성공하였습니다."),
 
     //fail
     FAIL_BAD_REQUEST(BAD_REQUEST, "잘못된 요청입니다."),

@@ -56,6 +56,40 @@ public class MyPageController {
         return Response.success(ResponseCode.SUCCESS_CREATED);
     }
 
+    /**
+     *
+     * @param user
+     * @param videoFile
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation(value = "Change ProfileVideo", notes = "프로필 영상 변경")
+    @PostMapping(value = "/profile/video",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response<Void> chagneProfileVideo(@AuthUser User user,
+                                             @RequestParam MultipartFile videoFile) throws IOException {
+
+        myPageService.changeProfileVideo(user, videoFile);
+
+        return Response.success(ResponseCode.SUCCESS_CREATED);
+    }
+
+    /**
+     *
+     * @param user
+     * @param imageFile
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation(value = "Change ProfileImage", notes = "프로필 이미지 변경")
+    @PostMapping(value = "/profile/image",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Response<Void> chagneProfileImage(@AuthUser User user,
+                                             @RequestParam MultipartFile imageFile) throws IOException {
+
+        myPageService.changeProfileImage(user, imageFile);
+
+        return Response.success(ResponseCode.SUCCESS_CREATED);
+    }
+
     @ApiOperation(value = "Delete PortfolioVideo", notes = "마이페이지에서 포트폴리오 영상 삭제")
     @DeleteMapping("/portfolio/video/{pvId}")
     public Response<Void> deletePostPortfolioVideo(@AuthUser User user,
