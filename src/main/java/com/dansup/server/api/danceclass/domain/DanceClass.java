@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -30,16 +31,14 @@ public class DanceClass extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "cv_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private ClassVideo classVideo;
 
     @Builder.Default
-    @OneToMany(mappedBy = "danceClass")
+    @OneToMany(mappedBy = "danceClass", cascade = CascadeType.REMOVE)
     private List<ClassGenre> classGenres = new ArrayList<>();
 
     @Column(nullable = false)
@@ -97,6 +96,8 @@ public class DanceClass extends BaseEntity {
     private String endTime;
 
     private String date;
+
+    private boolean onSite;
 
     private String reserveLink;
 

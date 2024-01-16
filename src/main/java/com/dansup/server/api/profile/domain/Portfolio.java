@@ -24,7 +24,6 @@ public class Portfolio extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Profile profile;
 
     @Column

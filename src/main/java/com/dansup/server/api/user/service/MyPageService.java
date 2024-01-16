@@ -5,6 +5,7 @@ import com.dansup.server.api.danceclass.domain.DanceClass;
 import com.dansup.server.api.danceclass.domain.State;
 import com.dansup.server.api.danceclass.dto.response.GetDanceClassListDto;
 import com.dansup.server.api.danceclass.repository.DanceClassRepository;
+import com.dansup.server.api.danceclass.service.DanceClassService;
 import com.dansup.server.api.profile.domain.PortfolioVideo;
 import com.dansup.server.api.profile.domain.Profile;
 import com.dansup.server.api.profile.domain.ProfileVideo;
@@ -30,18 +31,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.dansup.server.common.response.ResponseCode.FAIL_NOT_POSTER;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class MyPageService {
 
-    private final ProfileRepository profileRepository;
-
-    private final DanceClassRepository danceClassRepository;
-
     private final S3UploaderService s3UploaderService;
-
+    private final DanceClassService danceClassService;
+    private final ProfileRepository profileRepository;
+    private final DanceClassRepository danceClassRepository;
     private final PortfolioVideoRepository portfolioVideoRepository;
 
     public GetProfileDetailDto getMyPage(User user) {
@@ -85,6 +86,7 @@ public class MyPageService {
 
         return myPage.getPortfolioVideos().stream().map(
                 portfolioVideo -> GetFileUrlDto.builder()
+                        .pvId(portfolioVideo.getId())
                         .url(portfolioVideo.getUrl())
                         .build()
         ).collect(Collectors.toList());
@@ -139,6 +141,18 @@ public class MyPageService {
         portfolioVideoRepository.save(portfolioVideo);
     }
 
+    public void deletePortfolioVideo(User user, Long pvId) throws BaseException {
+
+        PortfolioVideo portfolioVideo = portfolioVideoRepository.findById(pvId).orElseThrow(
+                () -> new BaseException(ResponseCode.VIDEO_NOT_FOUND)
+        );;
+
+        compareUser(portfolioVideo, user);
+
+        danceClassService.deleteFile(portfolioVideo.getUrl());
+        portfolioVideoRepository.delete(portfolioVideo);
+    }
+
     private Profile loadMyPage(User user) {
 
         return profileRepository.findByUser(user).orElseThrow(
@@ -146,4 +160,12 @@ public class MyPageService {
         );
     }
 
+    private void compareUser(PortfolioVideo portfolioVideo, User user) {
+
+        Profile profile = loadMyPage(user);
+
+        if(!portfolioVideo.getProfile().equals(profile)){
+            throw new BaseException(FAIL_NOT_POSTER);
+        }
+    }
 }

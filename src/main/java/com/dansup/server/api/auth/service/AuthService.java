@@ -97,6 +97,15 @@ public class AuthService {
         SecurityContextHolder.clearContext();
     }
 
+    public void deleteUser(User user){
+
+        User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new BaseException(ResponseCode.USER_NOT_FOUND)
+        );
+
+        userRepository.delete(findUser);
+    }
+
     public AccessTokenDto reissueAccessToken(RefreshTokenDto refreshTokenDto) {
 
         if(!jwtTokenProvider.validateToken(refreshTokenDto.getRefreshToken())) {
